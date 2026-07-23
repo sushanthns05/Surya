@@ -1,0 +1,453 @@
+{% extends 'base.html' %}
+
+{% block title %}SURYA - Modern Educational Ecosystem{% endblock %}
+
+{% block head %}
+<style>
+/* Apple/Stripe-inspired Premium Hero */
+.premium-hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 100px 24px;
+}
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 10% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+  z-index: -2;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: float 20s infinite linear;
+  pointer-events: none;
+  z-index: -1;
+}
+@keyframes float {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-1000px) translateX(100px); opacity: 0; }
+}
+
+.hero-content {
+  max-width: 900px;
+  position: relative;
+  z-index: 2;
+}
+
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 32px;
+  backdrop-filter: blur(10px);
+}
+.premium-badge span {
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-h1 {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 24px;
+  background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-p {
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  margin: 0 auto 40px;
+  max-width: 600px;
+}
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.btn-premium {
+  background: #fff;
+  color: #000;
+  padding: 14px 32px;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s;
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+.btn-premium:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+}
+.btn-glass {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 32px;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 1rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+}
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Dashboard Mockup Tilt */
+.dashboard-mockup {
+  margin-top: 60px;
+  perspective: 1000px;
+}
+.mockup-inner {
+  background: rgba(10, 15, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 100px rgba(124, 58, 237, 0.1);
+  padding: 24px;
+  transform: rotateX(10deg);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: blur(20px);
+}
+.mockup-inner:hover {
+  transform: rotateX(0deg);
+}
+
+/* Statistics Grid */
+.premium-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: -40px;
+  position: relative;
+  z-index: 10;
+  padding: 0 24px;
+}
+.stat-glass {
+  background: rgba(15, 20, 35, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+  transition: all 0.3s;
+}
+.stat-glass:hover {
+  border-color: rgba(124, 58, 237, 0.4);
+  transform: translateY(-5px);
+  background: rgba(20, 25, 45, 0.8);
+}
+.stat-num {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.stat-text {
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+}
+
+/* Floating AI Assistant */
+.ai-assistant-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: pulse-glow 2s infinite;
+}
+.ai-assistant-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+}
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(139, 92, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+}
+
+.ai-chat-window {
+  position: fixed;
+  bottom: 110px;
+  right: 30px;
+  width: 350px;
+  height: 500px;
+  background: rgba(10, 15, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transform-origin: bottom right;
+  transform: scale(0);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ai-chat-window.active {
+  transform: scale(1);
+  opacity: 1;
+}
+.ai-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ai-header-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+}
+.ai-header-text h4 { margin: 0; font-size: 1rem; color: #fff; }
+.ai-header-text p { margin: 2px 0 0; font-size: 0.8rem; color: #10b981; }
+
+.ai-body {
+  flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+}
+.ai-msg {
+  padding: 12px 16px; border-radius: 16px; font-size: 0.95rem; line-height: 1.5; max-width: 85%;
+}
+.ai-msg.bot { background: rgba(255,255,255,0.05); color: #fff; align-self: flex-start; border-bottom-left-radius: 4px; }
+.ai-msg.user { background: #3b82f6; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+.ai-footer {
+  padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px;
+}
+.ai-input {
+  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  padding: 12px 16px; border-radius: 99px; color: #fff; outline: none;
+}
+.ai-send {
+  background: #3b82f6; border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+  <!-- Particles Generator -->
+  <div class="hero-bg" id="particles"></div>
+
+  <section class="premium-hero">
+    <div class="hero-content">
+      <div class="premium-badge">
+        ✨ <span>Introducing SURYA OS</span> The Future of Education
+      </div>
+      <h1 class="hero-h1">Learn. Build. Scale.</h1>
+      <p class="hero-p">Experience the world's most advanced educational ecosystem. Seamlessly integrated dashboards, AI-powered insights, and limitless opportunities.</p>
+      <div class="hero-actions">
+        <a href="/Register.html" class="btn-premium">Start Journey</a>
+        <a href="#explore" class="btn-glass">Explore Ecosystem</a>
+      </div>
+
+      <div class="dashboard-mockup">
+        <div class="mockup-inner">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="Dashboard Preview" style="border-radius: 12px; width: 100%; height: 300px; object-fit: cover; opacity: 0.8;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap premium-stats" id="explore">
+    <div class="stat-glass">
+      <div class="stat-num counter" data-target="150000">0</div>
+      <div class="stat-text">Active Students</div>
+    </div>
+    <div class="stat-glass">
+      <div class="stat-num counter" data-target="500">0</div>
+      <div class="stat-text">Global Partners</div>
+    </div>
+    <div class="stat-glass">
+      <div class="stat-num counter" data-target="1200">0</div>
+      <div class="stat-text">Research Papers</div>
+    </div>
+    <div class="stat-glass">
+      <div class="stat-num">98%</div>
+      <div class="stat-text">Placement Rate</div>
+    </div>
+  </div>
+
+  <section class="wrap" style="padding: 120px 0;">
+    <div style="text-align: center; margin-bottom: 60px;">
+      <h2 style="font-size: 2.5rem; margin-bottom: 16px;">Everything you need. Integrated.</h2>
+      <p style="color: rgba(255,255,255,0.6); max-width: 600px; margin: 0 auto;">From admission to graduation, our interconnected portals ensure a frictionless academic experience.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
+      
+      <!-- Feature Card 1 -->
+      <div class="stat-glass" style="text-align: left; padding: 40px;">
+        <div style="font-size: 3rem; margin-bottom: 24px;">🧠</div>
+        <h3 style="font-size: 1.5rem; margin-bottom: 16px;">AI Assistant</h3>
+        <p style="color: rgba(255,255,255,0.6); line-height: 1.6;">Your personal academic copilot. Get instant answers regarding syllabus, exam dates, and scholarship eligibility.</p>
+      </div>
+
+      <!-- Feature Card 2 -->
+      <div class="stat-glass" style="text-align: left; padding: 40px;">
+        <div style="font-size: 3rem; margin-bottom: 24px;">📊</div>
+        <h3 style="font-size: 1.5rem; margin-bottom: 16px;">Smart Dashboards</h3>
+        <p style="color: rgba(255,255,255,0.6); line-height: 1.6;">Beautifully crafted interfaces for students, parents, and faculty to track attendance, grades, and real-time performance analytics.</p>
+      </div>
+
+      <!-- Feature Card 3 -->
+      <div class="stat-glass" style="text-align: left; padding: 40px;">
+        <div style="font-size: 3rem; margin-bottom: 24px;">🚀</div>
+        <h3 style="font-size: 1.5rem; margin-bottom: 16px;">Career Portal</h3>
+        <p style="color: rgba(255,255,255,0.6); line-height: 1.6;">Direct integration with top tech companies. Upload resumes, practice mock interviews, and secure your dream package.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- Floating AI Assistant -->
+<button class="ai-assistant-btn" onclick="toggleChat()" aria-label="Open AI Assistant">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+</button>
+
+<div class="ai-chat-window" id="aiChat">
+  <div class="ai-header">
+    <div class="ai-header-icon">✨</div>
+    <div class="ai-header-text">
+      <h4>SURYA AI</h4>
+      <p>Online • Ready to help</p>
+    </div>
+    <button onclick="toggleChat()" style="margin-left: auto; background: none; border: none; color: #fff; cursor: pointer;">✖</button>
+  </div>
+  <div class="ai-body" id="aiBody">
+    <div class="ai-msg bot">Hi there! I am your SURYA Academic Copilot. How can I help you today?</div>
+  </div>
+  <div class="ai-footer">
+    <input type="text" class="ai-input" id="aiInput" placeholder="Ask anything..." onkeypress="handleEnter(event)">
+    <button class="ai-send" onclick="sendMsg()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  // Generate random floating particles
+  const bg = document.getElementById('particles');
+  for(let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 8 + 2;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.animationDelay = (Math.random() * 20) + 's';
+    p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    bg.appendChild(p);
+  }
+
+  // Animated Counters
+  const counters = document.querySelectorAll('.counter');
+  const speed = 200; 
+
+  counters.forEach(counter => {
+    const updateCount = () => {
+      const target = +counter.getAttribute('data-target');
+      const count = +counter.innerText;
+      const inc = target / speed;
+      if (count < target) {
+        counter.innerText = Math.ceil(count + inc);
+        setTimeout(updateCount, 1);
+      } else {
+        counter.innerText = target + (target > 1000 ? '+' : '');
+      }
+    };
+    // Intersection Observer to start when visible
+    const observer = new IntersectionObserver((entries) => {
+      if(entries[0].isIntersecting) {
+        updateCount();
+        observer.disconnect();
+      }
+    });
+    observer.observe(counter);
+  });
+
+  // AI Chat Logic
+  const chatWindow = document.getElementById('aiChat');
+  const chatBody = document.getElementById('aiBody');
+  const chatInput = document.getElementById('aiInput');
+
+  function toggleChat() {
+    chatWindow.classList.toggle('active');
+  }
+
+  function handleEnter(e) {
+    if(e.key === 'Enter') sendMsg();
+  }
+
+  function sendMsg() {
+    const text = chatInput.value.trim();
+    if(!text) return;
+    
+    // User message
+    const uMsg = document.createElement('div');
+    uMsg.className = 'ai-msg user';
+    uMsg.textContent = text;
+    chatBody.appendChild(uMsg);
+    chatInput.value = '';
+    
+    // Auto scroll
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Fake AI typing delay
+    setTimeout(() => {
+      const bMsg = document.createElement('div');
+      bMsg.className = 'ai-msg bot';
+      bMsg.innerHTML = "I am an AI prototype. I can help with admissions, scholarships, and campus navigation! How else can I assist?";
+      chatBody.appendChild(bMsg);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }, 1000);
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400' role='img' aria-label='Surya Education Board'>
+  <defs>
+    <linearGradient id='g' x1='0' x2='1'>
+      <stop offset='0' stop-color='#06b6d4'/>
+      <stop offset='1' stop-color='#0ea5a4'/>
+    </linearGradient>
+  </defs>
+  <rect width='100%' height='100%' fill='url(#g)' rx='18'/>
+  <g fill='white' opacity='0.95'>
+    <circle cx='140' cy='200' r='110'/>
+    <rect x='250' y='120' width='420' height='160' rx='14'/>
+  </g>
+</svg>

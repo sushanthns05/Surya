@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard — SURYA EDUCATION BOARD{% endblock %}
+
+{% block content %}
+<main class="wrap" style="padding-top: 40px; padding-bottom: 80px;">
+  <section class="page-header">
+    <h1>Admin Dashboard</h1>
+    <p class="muted">Review exam registrations and contact enquiries submitted through the portal.</p>
+  </section>
+
+  <!-- Control Panel -->
+  <section class="card" style="padding: 24px; margin-bottom: 24px; border-radius: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      
+      <!-- Tabs Trigger -->
+      <div class="admin-tabs" style="display: flex; gap: 8px; background: rgba(255,255,255,0.06); padding: 6px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12);">
+        <button class="tab-btn active" data-tab="registrations" style="background: linear-gradient(135deg, #7c3aed, #2563eb); border: 0; color: #fff; padding: 10px 22px; border-radius: 999px; font-weight: 600; cursor: pointer; transition: all 0.25s;">
+          Exam Registrations ({{ registration_rows|length - 1 if registration_rows|length > 0 else 0 }})
+        </button>
+        <button class="tab-btn" data-tab="contacts" style="background: transparent; border: 0; color: rgba(255,255,255,0.7); padding: 10px 22px; border-radius: 999px; font-weight: 600; cursor: pointer; transition: all 0.25s;">
+          Contact Enquiries ({{ contact_rows|length - 1 if contact_rows|length > 0 else 0 }})
+        </button>
+        <button class="tab-btn" data-tab="broadcasts" style="background: transparent; border: 0; color: rgba(255,255,255,0.7); padding: 10px 22px; border-radius: 999px; font-weight: 600; cursor: pointer; transition: all 0.25s;">
+          Post Broadcasts ({{ broadcasts|length if broadcasts else 0 }})
+        </button>
+      </div>
+
+      <!-- Search and Actions -->
+      <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; flex-grow: 1; justify-content: flex-end;">
+        <input type="text" id="admin-search" placeholder="Search by name, ID, email..." style="padding: 10px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.08); color: #fff; outline: none; width: min(300px, 100%); font-size: 0.95rem;">
+        
+        <a id="btn-export-csv" href="/admin/download-registrations" class="btn primary" style="min-height: 40px; padding: 0 20px; font-size: 0.9rem;">
+          Export Registrations (CSV)
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Data Display Card -->
+  <section class="card" style="padding: 32px; border-radius: 24px; overflow-x: auto;">
+    
+    <!-- Tab 1: Registrations -->
+    <div class="tab-content" id="tab-registrations">
+      {% if registration_rows and registration_rows|length > 1 %}
+        <table class="data-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 2px solid rgba(255,255,255,0.12);">
+              {% for h in registration_rows[0] %}
+                <th style="padding: 14px 10px; font-weight: 600; color: rgba(255,255,255,0.9);">
+                  {{ h.replace('_', ' ').upper() }}
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody id="registrations-body">
+            {% for r in registration_rows[1:] %}
+              <tr class="table-row-item" style="border-bottom: 1px solid rgba(255,255,255,0.06); transition: background-color 0.2s;">
+                {% for c in r %}
+                  <td style="padding: 14px 10px; color: rgba(248,250,252,0.85); font-size: 0.95rem;">
+                    {% if loop.index0 == 0 %}
+                      <code style="background: rgba(124,58,237,0.15); color: #a78bfa; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-family: monospace;">{{ c }}</code>
+                    {% elif loop.index0 == 10 %}
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <select class="allocate-select" data-reg-id="{{ r[0] }}" style="background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 8px; outline: none; cursor: pointer; font-size: 0.9rem;">
+                          <option value="Pending" {% if c == 'Pending' %}selected{% endif %}>Pending</option>
+                          <option value="Bengaluru (HQ)" {% if c == 'Bengaluru (HQ)' %}selected{% endif %}>Bengaluru (HQ)</option>
+                          <option value="Mysuru" {% if c == 'Mysuru' %}selected{% endif %}>Mysuru</option>
+                          <option value="Hubballi" {% if c == 'Hubballi' %}selected{% endif %}>Hubballi</option>
+                          <option value="Mangaluru" {% if c == 'Mangaluru' %}selected{% endif %}>Mangaluru</option>
+                          <option value="Belagavi" {% if c == 'Belagavi' %}selected{% endif %}>Belagavi</option>
+                        </select>
+                        <span class="save-status" style="font-size: 1.1rem; display: inline-block; min-width: 20px;"></span>
+                      </div>
+                    {% else %}
+                      {{ c }}
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div style="text-align: center; padding: 40px 0;">
+          <p class="muted" style="font-size: 1.1rem; margin-bottom: 14px;">No exam registrations found.</p>
+          <a href="/Register.html" class="btn secondary">Register a Candidate</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Tab 2: Contacts -->
+    <div class="tab-content" id="tab-contacts" style="display: none;">
+      {% if contact_rows and contact_rows|length > 1 %}
+        <table class="data-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 2px solid rgba(255,255,255,0.12);">
+              {% for h in contact_rows[0] %}
+                <th style="padding: 14px 10px; font-weight: 600; color: rgba(255,255,255,0.9);">
+                  {{ h.replace('_', ' ').upper() }}
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody id="contacts-body">
+            {% for r in contact_rows[1:] %}
+              <tr class="table-row-item" style="border-bottom: 1px solid rgba(255,255,255,0.06); transition: background-color 0.2s;">
+                {% for c in r %}
+                  <td style="padding: 14px 10px; color: rgba(248,250,252,0.85); font-size: 0.95rem;">
+                    {{ c }}
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div style="text-align: center; padding: 40px 0;">
+          <p class="muted" style="font-size: 1.1rem;">No contact enquiries found.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Tab 3: Broadcasts -->
+    <div class="tab-content" id="tab-broadcasts" style="display: none;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; min-width: 600px;">
+        
+        <!-- Post Broadcast Form -->
+        <div class="card" style="padding: 24px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+          <h3 style="margin-top: 0; color: #fff; margin-bottom: 16px;">Post a New Broadcast</h3>
+          <form id="broadcast-form" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+              <label for="broadcast-title" style="display: block; color: rgba(255,255,255,0.85); font-size: 0.9rem; margin-bottom: 6px; font-weight: 600;">Broadcast Title</label>
+              <input type="text" id="broadcast-title" name="title" required placeholder="e.g., SET-01 Hall Ticket Released" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; outline: none; font-size: 0.95rem;">
+            </div>
+            <div>
+              <label for="broadcast-content" style="display: block; color: rgba(255,255,255,0.85); font-size: 0.9rem; margin-bottom: 6px; font-weight: 600;">Announcement Content</label>
+              <textarea id="broadcast-content" name="content" required placeholder="Type the message details here..." rows="5" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; outline: none; font-size: 0.95rem; resize: vertical;"></textarea>
+            </div>
+            <div>
+              <label for="broadcast-document" style="display: block; color: rgba(255,255,255,0.85); font-size: 0.9rem; margin-bottom: 6px; font-weight: 600;">Supporting Document (Optional)</label>
+              <input type="file" id="broadcast-document" name="document" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; outline: none; font-size: 0.95rem;">
+            </div>
+            <button class="btn primary" type="submit" style="margin-top: 8px; min-height: 40px; font-size: 0.95rem;">Publish Broadcast</button>
+            <div id="broadcast-status" style="font-size: 0.9rem; margin-top: 6px;"></div>
+          </form>
+        </div>
+
+        <!-- Previous Broadcasts List -->
+        <div class="card" style="padding: 24px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 16px;">
+          <h3 style="margin-top: 0; color: #fff; margin-bottom: 8px;">Previous Broadcasts</h3>
+          <div style="overflow-y: auto; max-height: 350px; display: flex; flex-direction: column; gap: 12px; padding-right: 8px;">
+            {% if broadcasts %}
+              {% for b in broadcasts %}
+              <div style="padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.02); border-left: 3px solid #7c3aed; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                  <strong style="color: #fff; font-size: 0.95rem;">{{ b.title }}</strong>
+                  <span style="font-size: 0.75rem; color: rgba(255,255,255,0.4); font-family: monospace; white-space: nowrap;">{{ b.date }}</span>
+                </div>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0; line-height: 1.4;">{{ b.content }}</p>
+                {% if b.document %}
+                <div style="margin-top: 8px;">
+                  <a href="/uploads/{{ b.document }}" target="_blank" style="color: #60a5fa; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 600;">
+                    📄 View Supporting Document
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+            {% else %}
+              <p class="muted" style="font-size: 0.95rem;">No previous broadcasts found.</p>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+</main>
+{% endblock %}

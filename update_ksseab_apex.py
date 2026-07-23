@@ -1,0 +1,278 @@
+import os
+
+HTML_CONTENT = """{% extends 'base.html' %}
+
+{% block title %}KSSEAB — SURYA EDUCATION BOARD{% endblock %}
+
+{% block content %}
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <div class="hero-panel reveal">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="url(#ksseab-grad)" />
+            <path d="M16 8l8 5v6l-8 5-8-5v-6l8-5z" fill="#fff" opacity="0.9" />
+            <path d="M16 12l5 3v2l-5 3-5-3v-2l5-3z" fill="url(#ksseab-grad)" />
+            <defs>
+              <linearGradient id="ksseab-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#2563eb" />
+                <stop offset="1" stop-color="#3b82f6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="eyebrow" style="margin-bottom: 0; color: #3b82f6;">The Apex Educational Authority</span>
+        </div>
+        <h1>Karnataka Surya School Education and Assessment Board (KSSEAB)</h1>
+        <p style="font-size: 1.1rem; max-width: 800px;">The autonomous authority regulating, developing, and administering secondary and higher secondary education across affiliated institutions.</p>
+        <div style="margin-top: 1.5rem; padding: 1rem 2rem; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 4px solid #3b82f6; display: inline-block;">
+          <p style="margin: 0; font-size: 1.2rem; font-style: italic; color: #60a5fa; font-weight: 600;">"Educating Minds • Inspiring Innovation • Building the Future"</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="section-head" style="text-align: center;">
+      <span class="eyebrow">Overview</span>
+      <h2>About KSSEAB</h2>
+      <p>Providing a unified educational framework that promotes academic excellence, innovation, research, ethics, digital learning, and holistic student development.</p>
+    </div>
+    
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(59, 130, 246, 0.2);">
+        <h3 style="color: #60a5fa;">Our Vision</h3>
+        <p style="color: #94a3b8;">To establish a world-class education system that empowers learners through knowledge, innovation, ethics, research, creativity, and technology while preparing them for global careers.</p>
+      </div>
+
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(16, 185, 129, 0.2);">
+        <h3 style="color: #34d399;">Core Values</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem; columns: 2; -webkit-columns: 2;">
+          <li>Excellence</li>
+          <li>Integrity</li>
+          <li>Innovation</li>
+          <li>Accountability</li>
+          <li>Inclusiveness</li>
+          <li>Transparency</li>
+          <li>Leadership</li>
+        </ul>
+      </div>
+
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(244, 114, 182, 0.2);">
+        <h3 style="color: #f472b6;">Our Mission</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Deliver high-quality education.</li>
+          <li>Build strong conceptual understanding.</li>
+          <li>Encourage scientific inquiry.</li>
+          <li>Promote innovation and entrepreneurship.</li>
+          <li>Integrate technology into learning.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="grid" style="grid-template-columns: 1fr 2fr; gap: 3rem; align-items: start;">
+      <div>
+        <h2 style="color: #3b82f6; font-size: 2rem;">Organizational Structure</h2>
+        <p style="color: #94a3b8;">The board governs two major divisions responsible for the complete lifecycle of secondary and higher secondary education.</p>
+        <div class="glass-panel" style="padding: 1.5rem; margin-top: 2rem; text-align: center; border-color: rgba(59, 130, 246, 0.3) !important;">
+          <h3 style="margin-top: 0; color: #fff;">KSSEAB</h3>
+          <div style="width: 2px; height: 30px; background: rgba(255,255,255,0.2); margin: 0 auto;"></div>
+          <div style="border-top: 2px solid rgba(255,255,255,0.2); width: 80%; margin: 0 auto; display: flex; justify-content: space-between;">
+            <div style="width: 2px; height: 20px; background: rgba(255,255,255,0.2);"></div>
+            <div style="width: 2px; height: 20px; background: rgba(255,255,255,0.2);"></div>
+          </div>
+          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 10px;">
+            <div>
+              <h4 style="color: #10b981; margin: 0;">KSSSCE</h4>
+              <span style="font-size: 0.8rem; color: #94a3b8;">(Class X Board)</span>
+            </div>
+            <div>
+              <h4 style="color: #8b5cf6; margin: 0;">KSPUEAB</h4>
+              <span style="font-size: 0.8rem; color: #94a3b8;">(1st & 2nd PUC)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem;">
+        <h3 style="margin-top: 0; color: #60a5fa;">Education Divisions</h3>
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <h4 style="color: #10b981; border-bottom: 1px solid rgba(16, 185, 129, 0.2); padding-bottom: 0.5rem;">1. Secondary Education (KSSSCE)</h4>
+            <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.5rem;"><strong>Level:</strong> Class X (10th Standard)</p>
+            <ul style="color: #cbd5e1; list-style-type: square; padding-left: 1.2rem; font-size: 0.9rem;">
+              <li>Secondary Education</li>
+              <li>Class X Board Examination</li>
+              <li>School Affiliation</li>
+              <li>Curriculum Development</li>
+              <li>Student Assessment</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color: #8b5cf6; border-bottom: 1px solid rgba(139, 92, 246, 0.2); padding-bottom: 0.5rem;">2. Higher Secondary (KSPUEAB)</h4>
+            <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.5rem;"><strong>Level:</strong> Class XI & XII (1st & 2nd PUC)</p>
+            <ul style="color: #cbd5e1; list-style-type: square; padding-left: 1.2rem; font-size: 0.9rem;">
+              <li>Pre-University Education</li>
+              <li>Stream Management</li>
+              <li>PUC Board Examination</li>
+              <li>Competitive Examination Readiness</li>
+              <li>University Preparation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="section-head" style="text-align: center;">
+      <span class="eyebrow">Ecosystem</span>
+      <h2>Official Examinations Under KSSEAB</h2>
+      <p>The board conducts a wide array of standardized assessments for both school levels and higher education admissions.</p>
+    </div>
+
+    <div class="surya-table-container">
+      <table class="surya-table">
+        <thead>
+          <tr>
+            <th>Examination</th>
+            <th>Level / Purpose</th>
+            <th>Conducted By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>KSSSCE</strong></td>
+            <td>Class X (10th Standard)</td>
+            <td style="color: #10b981; font-weight: bold;">KSSEAB</td>
+          </tr>
+          <tr>
+            <td><strong>KSPUCE</strong></td>
+            <td>1st & 2nd PUC</td>
+            <td style="color: #8b5cf6; font-weight: bold;">KSPUEAB (Under KSSEAB)</td>
+          </tr>
+          <tr>
+            <td><strong>SET Session-01</strong></td>
+            <td>Engineering Entrance</td>
+            <td style="color: #3b82f6; font-weight: bold;">KSSEAB</td>
+          </tr>
+          <tr>
+            <td><strong>SET Session-02</strong></td>
+            <td>Advanced Engineering Entrance</td>
+            <td style="color: #3b82f6; font-weight: bold;">KSSEAB</td>
+          </tr>
+          <tr>
+            <td><strong>SAT (Surya Admission Test)</strong></td>
+            <td>Undergraduate Admissions</td>
+            <td style="color: #3b82f6; font-weight: bold;">KSSEAB</td>
+          </tr>
+          <tr>
+            <td><strong>SME (Surya Medical Exam)</strong></td>
+            <td>Medical Admissions</td>
+            <td style="color: #3b82f6; font-weight: bold;">KSSEAB</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="glass-panel" style="padding: 3rem; background: linear-gradient(145deg, rgba(15,20,35,0.8) 0%, rgba(59,130,246,0.05) 100%);">
+      <h2 style="margin-top: 0; text-align: center;">Academic Framework & Philosophy</h2>
+      <p style="text-align: center; color: #94a3b8; max-width: 700px; margin: 0 auto 2rem;">The curriculum emphasizes conceptual understanding, real-life applications, logical reasoning, and scientific investigation.</p>
+      
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+          <h4 style="color: #60a5fa; border-bottom: 1px solid rgba(59,130,246,0.2); padding-bottom: 0.5rem;">Academic Framework</h4>
+          <ul style="color: #cbd5e1; columns: 2; -webkit-columns: 2; gap: 1rem; padding-left: 1rem;">
+            <li>Competency-Based Learning</li>
+            <li>Concept-Oriented Curriculum</li>
+            <li>Research-Based Education</li>
+            <li>Project-Based Learning</li>
+            <li>Laboratory Education</li>
+            <li>Digital Learning</li>
+            <li>Skill Development</li>
+            <li>Artificial Intelligence</li>
+            <li>Financial Literacy</li>
+            <li>Entrepreneurship</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #34d399; border-bottom: 1px solid rgba(16,185,129,0.2); padding-bottom: 0.5rem;">Digital Examination Services</h4>
+          <ul style="color: #cbd5e1; columns: 2; -webkit-columns: 2; gap: 1rem; padding-left: 1rem; font-size: 0.9rem;">
+            <li>Online Registration</li>
+            <li>Hall Ticket Download</li>
+            <li>Examination Timetable</li>
+            <li>Model Question Papers</li>
+            <li>Results Portal</li>
+            <li>Digital Marks Cards</li>
+            <li>Certificate Verification</li>
+            <li>Revaluation Portal</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #6366f1;">
+        <h3 style="margin-top: 0;">Examination Security</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Encrypted Question Papers</li>
+          <li>QR-Code Answer Booklets</li>
+          <li>AI-Based Malpractice Detection</li>
+          <li>CCTV Surveillance</li>
+          <li>Biometric & Digital Attendance</li>
+          <li>Secure Evaluation System</li>
+        </ul>
+      </div>
+      
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #ef4444;">
+        <h3 style="margin-top: 0;">Research & Innovation</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Science Research Projects</li>
+          <li>Mathematics Olympiads</li>
+          <li>Coding Challenges</li>
+          <li>Robotics Competitions</li>
+          <li>Artificial Intelligence Projects</li>
+          <li>Entrepreneurship Programs</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #eab308;">
+        <h3 style="margin-top: 0;">Quality Assurance</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Curriculum Standards</li>
+          <li>School Performance</li>
+          <li>Teacher Development</li>
+          <li>Assessment Quality</li>
+          <li>Digital Infrastructure</li>
+          <li>Academic Research</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem; text-align: center;">
+    <div class="glass-panel" style="padding: 3rem 2rem; max-width: 600px; margin: 0 auto;">
+      <span class="eyebrow" style="color: #fbbf24; margin-bottom: 0.5rem; display: block;">Schedule</span>
+      <h3 style="margin-top: 0;">Important Dates</h3>
+      <p style="color: #94a3b8; margin-bottom: 2rem;">The official schedule for the KSSEAB examinations has been moved to a dedicated page.</p>
+      <a href="/KSSEAB_Dates.html" class="btn primary">View KSSEAB Dates</a>
+    </div>
+  </section>
+</main>
+{% endblock %}
+"""
+
+def main():
+    os.chdir(r"e:\Sushanth Projects\SURYA\templates")
+    with open("KSSEAB.html", "w", encoding="utf-8") as f:
+        f.write(HTML_CONTENT)
+    print("Updated KSSEAB.html with comprehensive apex board data successfully.")
+
+if __name__ == "__main__":
+    main()

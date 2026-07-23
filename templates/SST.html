@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block title %}Surya Scholarship Test (SST) — SURYA EDUCATION BOARD{% endblock %}
+
+{% block content %}
+<main>
+  <section class="page-hero" style="position: relative; overflow: hidden;">
+    <div class="wrap" style="position: relative; z-index: 2;">
+      <div class="hero-panel reveal">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="url(#sst-grad)" />
+            <path d="M16 6l9 6-9 6-9-6 9-6zm0 14l9-6 2 1.33-11 7.33-11-7.33 2-1.33 9 6z" fill="#fff" opacity="0.9" />
+            <defs>
+              <linearGradient id="sst-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#8b5cf6" />
+                <stop offset="1" stop-color="#c084fc" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="eyebrow" style="margin-bottom: 0; color: #a78bfa;">Surya Education Board (SEB)</span>
+        </div>
+        <h1>Surya Scholarship Test (SST)</h1>
+        <p style="font-size: 1.1rem; max-width: 800px;">Empowering Brilliant Minds Through Merit Scholarships</p>
+        <div style="margin-top: 1.5rem; padding: 1rem 2rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 4px solid #8b5cf6; display: inline-block;">
+          <p style="margin: 0; font-size: 1.2rem; font-style: italic; color: #c084fc; font-weight: 600;">"Dream Big. Learn Better. Achieve More."</p>
+        </div>
+        <div class="hero-badges" style="margin-top: 2rem;">
+          <a href="/Register_SST.html" class="btn primary" style="background: linear-gradient(135deg, #8b5cf6, #c084fc); border: none;">Apply Now</a>
+          <a href="/SST_Dates.html" class="btn secondary">View Timeline</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="section-head" style="text-align: center;">
+      <span class="eyebrow">Overview</span>
+      <h2>About SST</h2>
+      <p>A national-level scholarship examination designed to identify academically talented students and provide financial assistance, fee waivers, merit awards, and academic opportunities.</p>
+    </div>
+    
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(139, 92, 246, 0.2);">
+        <h3 style="color: #c084fc;">Core Evaluations</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Conceptual Understanding</li>
+          <li>Analytical Ability</li>
+          <li>Logical Thinking</li>
+          <li>Scientific Reasoning</li>
+          <li>Quantitative Aptitude</li>
+          <li>Problem Solving</li>
+        </ul>
+      </div>
+
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(59, 130, 246, 0.2);">
+        <h3 style="color: #60a5fa;">Why Choose SST</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>National Recognition</li>
+          <li>Merit Scholarships</li>
+          <li>Transparent Selection</li>
+          <li>Online Examination</li>
+          <li>AI Proctoring</li>
+          <li>Digital Certificates</li>
+        </ul>
+      </div>
+
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(16, 185, 129, 0.2);">
+        <h3 style="color: #34d399;">Examination Cycles</h3>
+        <p style="color: #94a3b8;">Conducted twice every year in Computer-Based Test (CBT) and Offline modes.</p>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li><strong>Spring Session:</strong> January–March</li>
+          <li><strong>Autumn Session:</strong> August–October</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="grid" style="grid-template-columns: 1fr 2fr; gap: 3rem; align-items: start;">
+      <div>
+        <h2 style="color: #8b5cf6; font-size: 2rem;">Scholarship Categories</h2>
+        <p style="color: #94a3b8;">SST is open to students from school, pre-university, and higher education. Choose the category that applies to your academic level.</p>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem;">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <h4 style="color: #60a5fa; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 0.5rem;">SST-J: Junior</h4>
+            <ul style="color: #cbd5e1; list-style-type: square; padding-left: 1.2rem; font-size: 0.95rem;">
+              <li>Class IX</li>
+              <li>Class X</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color: #34d399; border-bottom: 1px solid rgba(16, 185, 129, 0.2); padding-bottom: 0.5rem;">SST-P: Pre-University</h4>
+            <ul style="color: #cbd5e1; list-style-type: square; padding-left: 1.2rem; font-size: 0.95rem;">
+              <li>1st PUC</li>
+              <li>2nd PUC</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color: #f472b6; border-bottom: 1px solid rgba(244, 114, 182, 0.2); padding-bottom: 0.5rem;">SST-U: Undergraduate</h4>
+            <ul style="color: #cbd5e1; list-style-type: square; padding-left: 1.2rem; font-size: 0.95rem;">
+              <li>B.Tech (1st - 4th Year)</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color: #fbbf24; border-bottom: 1px solid rgba(251, 191, 36, 0.2); padding-bottom: 0.5rem;">SST-G: Graduate</h4>
+            <ul style="color: #cbd5e1; list-style-type: square; padding-left: 1.2rem; font-size: 0.95rem;">
+              <li>M.Tech (1st - 2nd Year)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="glass-panel" style="padding: 3rem; background: linear-gradient(145deg, rgba(15,20,35,0.8) 0%, rgba(139,92,246,0.05) 100%);">
+      <h2 style="margin-top: 0; text-align: center;">Examination Pattern</h2>
+      
+      <div class="surya-table-container">
+        <table class="surya-table">
+          <thead>
+            <tr>
+              <th>Class/Level</th>
+              <th>Subjects / Sections</th>
+              <th>Qs</th>
+              <th>Duration</th>
+              <th>Marks</th>
+              <th>Marking</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Class IX</strong></td>
+              <td>Maths, Science, English, Logical Reasoning</td>
+              <td>100</td>
+              <td>2 Hrs</td>
+              <td>400</td>
+              <td>+4 / −1</td>
+            </tr>
+            <tr>
+              <td><strong>Class X</strong></td>
+              <td>Maths, Science, English, Mental Ability</td>
+              <td>100</td>
+              <td>2 Hrs</td>
+              <td>400</td>
+              <td>+4 / −1</td>
+            </tr>
+            <tr>
+              <td><strong>1st PUC</strong></td>
+              <td>Physics, Chemistry, Maths/Bio, Aptitude</td>
+              <td>120</td>
+              <td>3 Hrs</td>
+              <td>480</td>
+              <td>+4 / −1</td>
+            </tr>
+            <tr>
+              <td><strong>2nd PUC</strong></td>
+              <td>Physics, Chemistry, Maths/Bio, Adv. Aptitude</td>
+              <td>120</td>
+              <td>3 Hrs</td>
+              <td>480</td>
+              <td>+4 / −1</td>
+            </tr>
+            <tr>
+              <td><strong>B.Tech</strong></td>
+              <td>Core Engg, Maths, Programming, Aptitude, Reasoning</td>
+              <td>150</td>
+              <td>3 Hrs</td>
+              <td>600</td>
+              <td>+4 / −1</td>
+            </tr>
+            <tr>
+              <td><strong>M.Tech</strong></td>
+              <td>Adv. Engg, Research, Prog, Engg Maths, Innovation</td>
+              <td>150</td>
+              <td>3 Hrs</td>
+              <td>600</td>
+              <td>+4 / −1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="section-head" style="text-align: center;">
+      <span class="eyebrow">Rewards</span>
+      <h2>Scholarship Benefits</h2>
+      <p>Recognizing academic excellence with substantial financial aid and opportunities.</p>
+    </div>
+    
+    <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #6366f1;">
+        <h3 style="margin-top: 0; color: #818cf8;">Platinum</h3>
+        <p style="color: #cbd5e1; font-weight: bold; font-size: 1.1rem;">Top Rank Holders</p>
+        <ul style="color: #94a3b8; padding-left: 1rem; font-size: 0.9rem;">
+          <li>100% Tuition Fee Waiver</li>
+          <li>Admission Priority</li>
+          <li>Research/Laptop Grant</li>
+          <li>Gold Medal & Certificate</li>
+        </ul>
+      </div>
+      
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #fbbf24;">
+        <h3 style="margin-top: 0; color: #fcd34d;">Gold</h3>
+        <ul style="color: #94a3b8; padding-left: 1rem; font-size: 0.9rem;">
+          <li>75% Tuition Fee Waiver</li>
+          <li>Merit Scholarship</li>
+          <li>Gold Certificate</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #94a3b8;">
+        <h3 style="margin-top: 0; color: #cbd5e1;">Silver</h3>
+        <ul style="color: #94a3b8; padding-left: 1rem; font-size: 0.9rem;">
+          <li>50% Tuition Fee Waiver</li>
+          <li>Merit Certificate</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #d97706;">
+        <h3 style="margin-top: 0; color: #f59e0b;">Bronze</h3>
+        <ul style="color: #94a3b8; padding-left: 1rem; font-size: 0.9rem;">
+          <li>25% Tuition Fee Waiver</li>
+          <li>Participation Scholarship</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem; text-align: center;">
+    <div class="glass-panel" style="padding: 3rem 2rem; max-width: 800px; margin: 0 auto;">
+      <span class="eyebrow" style="color: #a78bfa; margin-bottom: 0.5rem; display: block;">Official Motto</span>
+      <h3 style="margin-top: 0; color: #fff; font-style: italic;">"Talent Deserves Opportunity. Excellence Deserves Recognition."</h3>
+      <p style="color: #94a3b8; margin-top: 1rem; margin-bottom: 0; font-size: 1.1rem;">"Empowering Students Today, Inspiring Leaders Tomorrow."</p>
+    </div>
+  </section>
+
+</main>
+{% endblock %}

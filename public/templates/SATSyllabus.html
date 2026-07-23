@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}SAT 2027 Test Papers & Syllabus — SURYA EDUCATION BOARD{% endblock %}
+
+{% block head %}
+<style>
+  .syllabus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .syllabus-card {
+    background: rgba(15, 20, 35, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+  }
+  .syllabus-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(124, 58, 237, 0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+  .syllabus-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+    color: #e2e8f0;
+  }
+  .syllabus-card .code {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #a78bfa;
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+  .syllabus-card a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    width: fit-content;
+  }
+  .syllabus-card a:hover {
+    background: #3b82f6;
+    color: #fff;
+  }
+  .info-box {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 4px solid #3b82f6;
+    padding: 16px 24px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 32px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="wrap">
+  <section class="page-header" style="margin-bottom: 32px;">
+    <h1>SAT 2027 Test Papers & Syllabus</h1>
+    <p class="muted">Official Subject Syllabuses for SURYA ADMISSION TEST</p>
+  </section>
+
+  <div class="info-box reveal">
+    <p style="margin: 0;">SAT 2027 will be conducted for 30 test papers. A candidate is allowed to appear either in ONE or UP TO TWO test papers. Each SAT paper is for a total of 100 marks, General Aptitude (GA) is common for all papers (15 marks), and the rest of the paper covers the respective test paper syllabus (85 marks).</p>
+  </div>
+
+  <div class="syllabus-grid reveal">
+    {% set subjects = [
+      ("Aerospace Engineering", "AE"),
+      ("Agricultural Engineering", "AG"),
+      ("Architecture and Planning", "AR"),
+      ("Biomedical Engineering", "BM"),
+      ("Biotechnology", "BT"),
+      ("Civil Engineering", "CE"),
+      ("Chemical Engineering", "CH"),
+      ("Computer Science & Information Technology", "CS"),
+      ("Chemistry", "CY"),
+      ("Data Science & Artificial Intelligence", "DA"),
+      ("Electronics & Communication Engineering", "EC"),
+      ("Electrical Engineering", "EE"),
+      ("Environmental Science & Engineering", "ES"),
+      ("Ecology and Evolution", "EY"),
+      ("Geomatics Engineering", "GE"),
+      ("Geology & Geophysics", "GG"),
+      ("Instrumentation Engineering", "IN"),
+      ("Mathematics", "MA"),
+      ("Mechanical Engineering", "ME"),
+      ("Mining Engineering", "MN"),
+      ("Metallurgical Engineering", "MT"),
+      ("Naval Architecture & Marine Engineering", "NM"),
+      ("Petroleum Engineering", "PE"),
+      ("Physics", "PH"),
+      ("Production & Industrial Engineering", "PI"),
+      ("Statistics", "ST"),
+      ("Textile Engineering & Fibre Science", "TF"),
+      ("Engineering Sciences", "XE"),
+      ("Humanities & Social Sciences", "XH"),
+      ("Life Sciences", "XL")
+    ] %}
+
+    {% for name, code in subjects %}
+    <div class="syllabus-card">
+      <div>
+        <span class="code">Paper Code: {{ code }}</span>
+        <h3>{{ name }}</h3>
+      </div>
+      <a href="/assets/syllabus/{{ code }}_SAT_Syllabus.pdf" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Download Syllabus
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

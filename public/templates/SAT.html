@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+
+{% block title %}SURYA Admission Test (SAT) — SURYA EDUCATION BOARD{% endblock %}
+
+{% block head %}
+<style>
+  .sat-section { margin-top: 2rem; margin-bottom: 2rem; }
+  .sat-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; align-items: stretch; }
+  .sat-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 1.5rem; align-items: stretch; }
+  .sat-table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: rgba(255, 255, 255, 0.02); border-radius: 8px; overflow: hidden; }
+  .sat-table th, .sat-table td { padding: 12px 16px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
+  .sat-table th { background: rgba(255,255,255,0.05); font-weight: 600; color: #a78bfa; }
+  .sat-table tr:hover { background: rgba(255,255,255,0.03); }
+  .sat-list { margin-left: 1.5rem; margin-top: 1rem; }
+  .sat-list li { margin-bottom: 0.5rem; line-height: 1.6; }
+  .sat-h3 { font-size: 1.5rem; color: #60a5fa; margin-bottom: 1rem; border-bottom: 1px solid rgba(96, 165, 250, 0.2); padding-bottom: 0.5rem; margin-top: 0; }
+  .sat-h4 { font-size: 1.25rem; color: #fff; margin-bottom: 0.75rem; margin-top: 1rem; }
+  .sat-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; transition: transform 0.3s ease, border-color 0.3s ease; display: flex; flex-direction: column; }
+  .sat-card:hover { transform: translateY(-5px); border-color: rgba(96, 165, 250, 0.4); }
+  .sat-tagline { text-align: center; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 3rem 0; }
+  .sat-highlight { color: #a78bfa; font-weight: 600; }
+  
+  @media (max-width: 768px) {
+    .sat-grid-2, .sat-grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="wrap">
+  <section class="page-header">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px;">
+      <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="url(#sat-grad)" />
+        <path d="M16 8l9 5-9 5-9-5 9-5z" fill="#fff" />
+        <path d="M11 15.5v4c0 1.5 2.2 2.5 5 2.5s5-1 5-2.5v-4" stroke="#fff" stroke-width="2" />
+        <defs>
+          <linearGradient id="sat-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#3b82f6" />
+            <stop offset="1" stop-color="#2563eb" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="eyebrow" style="margin-bottom: 0;">SAT Admission</span>
+    </div>
+    <h1 style="text-align: center;">SURYA Admission Test (SAT)</h1>
+    <p class="muted" style="text-align: center; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">National Standardized Admission & Scholarship Examination</p>
+    <p class="sat-tagline">"Empowering Talent. Enabling Excellence. Building the Future."</p>
+    <div style="display: flex; justify-content: center; gap: 16px; margin-top: 24px;">
+      <a href="/SATSyllabus.html" class="btn primary" style="padding: 12px 28px; font-size: 1.1rem;">View 2027 Syllabus</a>
+      <a href="/Register_SAT.html" class="btn secondary" style="padding: 12px 28px; font-size: 1.1rem;">Register Now</a>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-card">
+      <p style="font-size: 1.1rem; line-height: 1.8; margin-top: 0;">The <strong>SURYA ADMISSION TEST (SAT)</strong> is a prestigious, standardized, merit-based entrance examination designed to identify talented students for admission into Surya Educational Institutions and affiliated colleges. Inspired by the examination structure and transparency, SAT evaluates students' conceptual understanding, analytical thinking, problem-solving ability, and subject knowledge.</p>
+      <p style="font-size: 1.1rem; line-height: 1.8; margin-top: 1rem; margin-bottom: 0;">SAT serves as a single-window national-level examination for admissions, scholarships, and academic excellence recognition.</p>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2" style="margin-top: 0;">
+      <div class="sat-card">
+        <h3 class="sat-h3">1. Vision</h3>
+        <p style="margin-top: 0; margin-bottom: 0;">To establish India's most trusted and transparent admission examination that identifies deserving students based on merit, knowledge, creativity, and aptitude while promoting academic excellence across the nation.</p>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">2. Mission</h3>
+        <ul class="sat-list" style="margin-bottom: 0;">
+          <li>Provide equal opportunities to all students.</li>
+          <li>Encourage conceptual learning instead of rote memorization.</li>
+          <li>Offer merit-based admissions.</li>
+          <li>Award scholarships to deserving candidates.</li>
+          <li>Build future leaders through quality education.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">3. Objectives</h3>
+        <ul class="sat-list" style="margin-bottom: 0;">
+          <li>Assess academic preparedness of students.</li>
+          <li>Evaluate logical reasoning and analytical skills.</li>
+          <li>Provide a fair and transparent admission process.</li>
+          <li>Reduce multiple entrance examinations.</li>
+          <li>Identify students eligible for scholarships.</li>
+          <li>Maintain national academic standards.</li>
+        </ul>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">4. Examination Levels</h3>
+        <p style="margin-top: 0;">SAT will be conducted in multiple categories.</p>
+        <table class="sat-table" style="margin-bottom: 0;">
+          <thead>
+            <tr><th>Level</th><th>Eligibility</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>SAT-Junior</td><td>Class 10 Passed</td><td>PU Colleges</td></tr>
+            <tr><td>SAT-UG</td><td>Class 12 Passed</td><td>Undergraduate</td></tr>
+            <tr><td>SAT-PG</td><td>Bachelor's Degree</td><td>Postgraduate</td></tr>
+            <tr><td>SAT-Pro</td><td>Working Prof.</td><td>Specialized</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <h2 style="text-align: center; margin-bottom: 1.5rem; font-size: 2rem;">5. Courses Covered</h2>
+    <div class="sat-grid-3" style="margin-top: 0;">
+      <div class="sat-card">
+        <h4 class="sat-h4" style="margin-top: 0;">Engineering</h4>
+        <ul class="sat-list">
+          <li>Computer Science & AI</li>
+          <li>Data & Information Science</li>
+          <li>Electronics & Electrical</li>
+          <li>Mechanical & Civil</li>
+          <li>Aerospace</li>
+        </ul>
+      </div>
+      <div class="sat-card">
+        <h4 class="sat-h4" style="margin-top: 0;">Medical & Health Sciences</h4>
+        <ul class="sat-list">
+          <li>Nursing & Pharmacy</li>
+          <li>Allied Health Sciences</li>
+        </ul>
+        <h4 class="sat-h4">Management</h4>
+        <ul class="sat-list" style="margin-bottom: 0;">
+          <li>BBA, MBA</li>
+          <li>Finance, Marketing, HR</li>
+        </ul>
+      </div>
+      <div class="sat-card">
+        <h4 class="sat-h4" style="margin-top: 0;">Commerce & Science</h4>
+        <ul class="sat-list">
+          <li>B.Com, M.Com, BCA</li>
+          <li>B.Sc, M.Sc</li>
+        </ul>
+        <h4 class="sat-h4">Arts, Humanities & Law</h4>
+        <ul class="sat-list" style="margin-bottom: 0;">
+          <li>BA, MA, Journalism, Psychology</li>
+          <li>LLB, Integrated Law Programs</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">6. Examination Mode</h3>
+        <table class="sat-table" style="margin-bottom: 0;">
+          <thead>
+            <tr><th>Feature</th><th>Details</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mode</td><td>Computer Based Test (CBT)</td></tr>
+            <tr><td>Type</td><td>Online</td></tr>
+            <tr><td>Duration</td><td>3 Hours</td></tr>
+            <tr><td>Language</td><td>English (Regional in future)</td></tr>
+            <tr><td>Difficulty</td><td>Moderate to Advanced</td></tr>
+            <tr><td>Type</td><td>MCQ, MSQ, NAT</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">8. Question Types</h3>
+        <ul class="sat-list" style="margin-bottom: 0;">
+          <li><span class="sat-highlight">Multiple Choice Questions (MCQ):</span> Four options, one correct answer.</li>
+          <li><span class="sat-highlight">Multiple Select Questions (MSQ):</span> Multiple correct answers.</li>
+          <li><span class="sat-highlight">Numerical Answer Type (NAT):</span> No options, numerical value entry.</li>
+          <li><span class="sat-highlight">Case Study Questions:</span> Real-life situations requiring analytical reasoning.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <h2 style="text-align: center; margin-bottom: 1.5rem; font-size: 2rem;">7. Examination Pattern</h2>
+    <div class="sat-grid-3" style="margin-top: 0;">
+      <div class="sat-card">
+        <h4 class="sat-h4" style="margin-top: 0;">Part A — General Aptitude (15%)</h4>
+        <p class="muted" style="margin-top: 0;">English, Logical Reasoning, Quantitative Aptitude, Data Interpretation, Verbal Ability.</p>
+        <p style="margin-top: auto; margin-bottom: 0;"><strong class="sat-highlight">Marks:</strong> 30</p>
+      </div>
+      <div class="sat-card">
+        <h4 class="sat-h4" style="margin-top: 0;">Part B — Core Subject (70%)</h4>
+        <p class="muted" style="margin-top: 0;">Questions related to the selected discipline (e.g., Mathematics, Programming, Accountancy, Biology, etc.).</p>
+        <p style="margin-top: auto; margin-bottom: 0;"><strong class="sat-highlight">Marks:</strong> 140</p>
+      </div>
+      <div class="sat-card">
+        <h4 class="sat-h4" style="margin-top: 0;">Part C — Innovation & Critical Thinking (15%)</h4>
+        <p class="muted" style="margin-top: 0;">Evaluates Creativity, Problem Solving, Decision Making, Innovation, and Case Studies.</p>
+        <p style="margin-top: auto; margin-bottom: 0;"><strong class="sat-highlight">Marks:</strong> 30</p>
+      </div>
+    </div>
+    
+    <div class="sat-card" style="max-width: 500px; margin: 2rem auto 0;">
+      <h3 class="sat-h3">Overall Score</h3>
+      <table class="sat-table" style="margin-top: 0; margin-bottom: 0;">
+        <thead>
+          <tr><th>Component</th><th>Marks</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>General Aptitude</td><td>30</td></tr>
+          <tr><td>Core Subject</td><td>140</td></tr>
+          <tr><td>Innovation</td><td>30</td></tr>
+          <tr style="background: rgba(96, 165, 250, 0.1);"><td><strong>Total</strong></td><td><strong>200</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">9. Marking Scheme</h3>
+        <table class="sat-table" style="margin-top: 0; margin-bottom: 0;">
+          <thead>
+            <tr><th>Question Difficulty</th><th>Marks</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Easy</td><td>1</td></tr>
+            <tr><td>Medium</td><td>2</td></tr>
+            <tr><td>Advanced</td><td>3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">Negative Marking</h3>
+        <table class="sat-table" style="margin-top: 0; margin-bottom: 0;">
+          <thead>
+            <tr><th>Question Type</th><th>Negative Marking</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>MCQ</td><td>-0.33 / -0.66</td></tr>
+            <tr><td>MSQ</td><td>No Negative</td></tr>
+            <tr><td>NAT</td><td>No Negative</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">10. Duration Breakdown</h3>
+        <table class="sat-table" style="margin-top: 0; margin-bottom: 0;">
+          <thead>
+            <tr><th>Section</th><th>Time</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Aptitude</td><td>30 Minutes</td></tr>
+            <tr><td>Core Subject</td><td>120 Minutes</td></tr>
+            <tr><td>Innovation</td><td>30 Minutes</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">11. Eligibility & 12. Age Limit</h3>
+        <ul class="sat-list" style="margin-top: 0;">
+          <li><strong>SAT-Junior:</strong> Completed Class 10</li>
+          <li><strong>SAT-UG:</strong> Completed Class 12</li>
+          <li><strong>SAT-PG:</strong> Bachelor's Degree</li>
+          <li><strong>SAT-Professional:</strong> Graduation or relevant experience</li>
+        </ul>
+        <p style="margin-top: auto; margin-bottom: 0;"><strong>Age Limit:</strong> No upper age limit. Candidates must satisfy course eligibility.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">13. Registration Process</h3>
+        <ol class="sat-list" style="margin-top: 0; margin-bottom: 0;">
+          <li>Online Registration</li>
+          <li>Email Verification</li>
+          <li>Profile Creation</li>
+          <li>Document Upload</li>
+          <li>Course Selection</li>
+          <li>Payment & Confirmation</li>
+          <li>Admit Card Download</li>
+        </ol>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">14. Examination Centers</h3>
+        <p style="margin-top: 0;">Bengaluru, Mysuru, Mangaluru, Hubballi, Belagavi, Chennai, Hyderabad, Mumbai, Delhi, Kolkata, Pune.</p>
+        <p class="muted" style="margin-top: auto; margin-bottom: 0; font-style: italic;">Future expansion to all major Indian cities.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">17. Admission Process</h3>
+        <p style="margin-top: 0;">Admission is based on:</p>
+        <ul class="sat-list" style="margin-bottom: 0;">
+          <li>SAT Score & Course Eligibility</li>
+          <li>Document Verification</li>
+          <li>Counseling & Seat Allocation</li>
+        </ul>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">18. Counseling Process</h3>
+        <p style="margin-top: 0;">Steps involved:</p>
+        <ul class="sat-list" style="margin-bottom: 0;">
+          <li>Choice Filling & Seat Allotment</li>
+          <li>Fee Payment & Reporting</li>
+          <li>Final Admission</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <h2 style="text-align: center; margin-bottom: 1.5rem; font-size: 2rem;">19. Scholarship Categories</h2>
+    <div class="sat-grid-2" style="margin-top: 0;">
+      <div class="sat-card" style="border-left: 4px solid #60a5fa;">
+        <h4 class="sat-h4" style="margin-top: 0;">Merit Scholarship</h4>
+        <p style="margin-top: 0;">Top Rank Holders</p>
+        <p class="sat-highlight" style="font-size: 1.25rem; margin-top: auto; margin-bottom: 0;">100% Tuition Fee Waiver</p>
+      </div>
+      <div class="sat-card" style="border-left: 4px solid #818cf8;">
+        <h4 class="sat-h4" style="margin-top: 0;">Excellence Scholarship</h4>
+        <p style="margin-top: 0;">Top 1000 Candidates</p>
+        <p class="sat-highlight" style="font-size: 1.25rem; margin-top: auto; margin-bottom: 0;">75% Tuition Fee Waiver</p>
+      </div>
+      <div class="sat-card" style="border-left: 4px solid #a78bfa;">
+        <h4 class="sat-h4" style="margin-top: 0;">Academic Scholarship</h4>
+        <p style="margin-top: 0;">Top 10%</p>
+        <p class="sat-highlight" style="font-size: 1.25rem; margin-top: auto; margin-bottom: 0;">50% Tuition Fee Waiver</p>
+      </div>
+      <div class="sat-card" style="border-left: 4px solid #c084fc;">
+        <h4 class="sat-h4" style="margin-top: 0;">Talent & Financial Aid</h4>
+        <p style="margin-top: 0;">Outstanding Innovation: <strong>Special Awards</strong></p>
+        <p style="margin-bottom: 0;">Economically Weaker: <strong>Need-based Aid</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">15. Result & 16. Validity</h3>
+        <p style="margin-top: 0;"><strong>Results include:</strong> Raw Score, Normalized Score, Percentile, AIR, Category Rank, and Merit Position.</p>
+        <p style="margin-top: auto; margin-bottom: 0;"><span class="sat-highlight">Score Validity:</span> <strong>3 Academic Years</strong></p>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">20. Ranking System</h3>
+        <p style="margin-top: 0;">The SURYA Admission Rank (SAR) uses Total Score, Subject Score, Aptitude Score, Innovation Score, and Tie-breaking Rules.</p>
+        <p style="margin-top: auto; margin-bottom: 0;"><strong>Ranks Issued:</strong> All India Rank (AIR), State Rank, Institution Rank.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">21. Examination Integrity</h3>
+        <ul class="sat-list" style="margin-top: 0; margin-bottom: 0;">
+          <li>AI-Based Remote Monitoring & Live CCTV</li>
+          <li>Biometric & Face Recognition</li>
+          <li>Aadhaar Verification (Optional)</li>
+          <li>Question Randomization</li>
+          <li>Secure Browser & End-to-End Encryption</li>
+        </ul>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">22. Code of Conduct</h3>
+        <p style="margin-top: 0;">Candidates must carry valid identification, reach the center early, avoid prohibited items, follow invigilator instructions, and maintain academic honesty.</p>
+        <p style="color: #ef4444; margin-top: auto; margin-bottom: 0;"><em>Violations may result in disqualification.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">23. Benefits of SAT</h3>
+        <ul class="sat-list" style="margin-top: 0; margin-bottom: 0;">
+          <li>Single examination for multiple programs.</li>
+          <li>Merit-based admission with scholarship opportunities.</li>
+          <li>National-level recognition and standardized evaluation.</li>
+          <li>Transparent ranking system & online counseling.</li>
+        </ul>
+      </div>
+      <div class="sat-card">
+        <h3 class="sat-h3">24. Future Roadmap</h3>
+        <ul class="sat-list" style="margin-top: 0; margin-bottom: 0;">
+          <li>AI-based adaptive testing & analytics.</li>
+          <li>International examination centers & collaborations.</li>
+          <li>Regional language support.</li>
+          <li>Digital scorecards & Blockchain-secured certificates.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal">
+    <div class="sat-grid-2">
+      <div class="sat-card">
+        <h3 class="sat-h3">25. Governing Authority</h3>
+        <h4 class="sat-h4" style="color: #60a5fa; margin-top: 0;">SURYA Examination Authority (SEA)</h4>
+        <p style="margin-bottom: 0;">The SEA is an autonomous body responsible for conducting SAT, developing policies, ensuring fairness and transparency, publishing results, and managing counseling and admissions.</p>
+      </div>
+      <div class="sat-card" style="text-align: center; padding: 2rem;">
+        <h3 class="sat-h3" style="color:#fbbf24;">26. Important Dates & Timeline</h3>
+        <p>The official schedule is now available on a dedicated page.</p>
+        <a href="/SAT_Dates.html" class="btn primary" style="margin-top: 1rem;">View Dates</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sat-section reveal" style="text-align: center; margin-top: 4rem; margin-bottom: 4rem;">
+    <p class="sat-tagline" style="font-size: 2rem; margin-bottom: 1rem;">SURYA ADMISSION TEST (SAT)</p>
+    <p style="font-size: 1.25rem; font-weight: 300; color: #a78bfa;">One Examination. Unlimited Opportunities.</p>
+  </section>
+</main>
+{% endblock %}

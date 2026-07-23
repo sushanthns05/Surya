@@ -1,0 +1,3 @@
+registration_id,name,email,phone,dob,gender,exam_category,priority_1,priority_2,priority_3,allocated_center,education_board
+SET2027-5929,Sushanth NS,sushanthns05@gmail.com,8310034078,2006-09-05,Male,SET 01,Bengaluru(HQ),Mysuru,Mangaluru,Pending,ICSE
+SET2027-1001,Practice Candidate,practicecandidate@gmail.com,9876543210,2005-12-25,Female,SET 01,Bengaluru(HQ),Mysuru,Hubli,Pending,CBSE

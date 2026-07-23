@@ -1,0 +1,256 @@
+import os
+
+HTML_CONTENT = """{% extends 'base.html' %}
+
+{% block title %}KSPUEAB (PUC) — SURYA EDUCATION BOARD{% endblock %}
+
+{% block content %}
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <div class="hero-panel reveal">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="url(#puc-grad)" />
+            <text x="16" y="21" fill="#fff" font-size="14" font-weight="700" text-anchor="middle" font-family="system-ui">12</text>
+            <defs>
+              <linearGradient id="puc-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#8b5cf6" />
+                <stop offset="1" stop-color="#6d28d9" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="eyebrow" style="margin-bottom: 0; color: #a78bfa;">Class XI (1st PUC) & Class XII (2nd PUC)</span>
+        </div>
+        <h1>Karnataka Surya Pre-University Certificate Examination (KSPUCE)</h1>
+        <p style="font-size: 1.1rem; max-width: 800px;">Conducted by the Karnataka Surya Pre-University Education and Assessment Board (KSPUEAB).</p>
+        <div style="margin-top: 1.5rem; padding: 1rem 2rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 4px solid #8b5cf6; display: inline-block;">
+          <p style="margin: 0; font-size: 1.2rem; font-style: italic; color: #c4b5fd; font-weight: 600;">"Knowledge • Innovation • Research • Excellence"</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="section-head" style="text-align: center;">
+      <span class="eyebrow">Overview</span>
+      <h2>About KSPUEAB</h2>
+      <p>Responsible for higher secondary education, preparing students for university studies, professional careers, research, entrepreneurship, and global opportunities.</p>
+    </div>
+    
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(139, 92, 246, 0.2);">
+        <h3 style="color: #a78bfa;">The KSPUEAB Approach</h3>
+        <p>A balanced approach to theory, laboratory work, projects, and skill development:</p>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Conceptual learning & Scientific thinking</li>
+          <li>Analytical reasoning & Mathematical rigor</li>
+          <li>Research-based education & Innovation</li>
+          <li>Technology integration & Leadership</li>
+        </ul>
+      </div>
+
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(59, 130, 246, 0.2);">
+        <h3 style="color: #60a5fa;">Our Vision</h3>
+        <p style="color: #94a3b8;">To nurture academically strong, innovative, ethical, and globally competent learners prepared for higher education, research, entrepreneurship, and professional excellence.</p>
+        <h3 style="color: #60a5fa; margin-top: 1.5rem;">Official Motto</h3>
+        <p style="font-size: 1.1rem; color: #fff; font-weight: bold;">Learn • Research • Innovate • Excel</p>
+      </div>
+
+      <div class="card" style="background: rgba(15, 20, 35, 0.4); border: 1px solid rgba(236, 72, 153, 0.2);">
+        <h3 style="color: #f472b6;">Our Mission</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Build strong conceptual foundations.</li>
+          <li>Foster innovation and scientific inquiry.</li>
+          <li>Develop research aptitude.</li>
+          <li>Integrate technology into education.</li>
+          <li>Prepare students for international opportunities.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="grid" style="grid-template-columns: 1fr 2fr; gap: 3rem; align-items: start;">
+      <div>
+        <h2 style="color: #a78bfa; font-size: 2rem;">PUC Structure & Streams</h2>
+        <p style="color: #94a3b8;">The two-year Pre-University Course is designed for competitive examination readiness and university preparation.</p>
+        <div class="glass-panel" style="padding: 1.5rem; margin-top: 2rem;">
+          <h4 style="margin-top:0; color: #fff;">1st PUC Focus</h4>
+          <ul style="margin-bottom:1rem; color: #cbd5e1; padding-left: 1rem;">
+            <li>Building conceptual foundations</li>
+            <li>Introducing advanced subjects</li>
+            <li>Laboratory learning & Skill development</li>
+          </ul>
+          <h4 style="margin-top:0; color: #fff;">2nd PUC Focus</h4>
+          <ul style="margin-bottom:0; color: #cbd5e1; padding-left: 1rem;">
+            <li>Advanced concepts & problem solving</li>
+            <li>Research-oriented learning</li>
+            <li>Competitive examination readiness</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem;">
+        <h3 style="margin-top: 0; color: #c4b5fd;">Academic Streams</h3>
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <h4 style="color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Science</h4>
+            <ul style="color: #94a3b8; list-style-type: square; padding-left: 1.2rem;">
+              <li>PCMB (Physics, Chem, Math, Biology)</li>
+              <li>PCMC (Physics, Chem, Math, Comp Sci)</li>
+              <li>PCME (Physics, Chem, Math, Electronics)</li>
+              <li>PCMAI (Physics, Chem, Math, AI)</li>
+            </ul>
+            <h4 style="color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-top: 1.5rem;">Languages</h4>
+            <ul style="color: #94a3b8; list-style-type: square; padding-left: 1.2rem;">
+              <li>English (Compulsory)</li>
+              <li>Kannada / Hindi / Sanskrit / Optional</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Commerce</h4>
+            <ul style="color: #94a3b8; list-style-type: square; padding-left: 1.2rem;">
+              <li>Accountancy & Business Studies</li>
+              <li>Economics & Statistics</li>
+              <li>Computer Science / Mathematics</li>
+              <li>Entrepreneurship & Financial Markets</li>
+            </ul>
+            <h4 style="color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-top: 1.5rem;">Arts & Humanities</h4>
+            <ul style="color: #94a3b8; list-style-type: square; padding-left: 1.2rem;">
+              <li>History & Political Science</li>
+              <li>Sociology & Psychology</li>
+              <li>Geography & Philosophy</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="section-head" style="text-align: center;">
+      <span class="eyebrow">Academic Deep Dive</span>
+      <h2>Science Stream Focus Areas</h2>
+    </div>
+
+    <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 2rem;">
+      <div class="card">
+        <h3 style="color: #60a5fa;">Physics</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem;">Mechanics, Thermodynamics, Waves, Oscillations, Electricity, Magnetism, Optics, Modern Physics.</p>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">Includes laboratory experiments, numerical analysis, graph interpretation, and real-world applications.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #34d399;">Chemistry</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem;">Physical, Organic, Inorganic Chemistry, Electrochemistry, Kinetics, Biomolecules.</p>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">Laboratory work includes qualitative analysis, volumetric analysis, and experimental techniques.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #a78bfa;">Mathematics</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem;">Algebra, Trigonometry, Calculus, Coordinate Geometry, Probability, Differential Equations.</p>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">Assessment emphasizes proofs, logical reasoning, modelling, and advanced problem solving.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #f472b6;">Computer Science & Biology</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem;"><strong>CS:</strong> Programming, SQL, Cyber Security, AI Fundamentals, Algorithms.<br><strong>Bio:</strong> Genetics, Human Physiology, Biotechnology.</p>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">Practical work focuses on coding and databases (CS) and scientific investigation (Bio).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="glass-panel" style="padding: 3rem; background: linear-gradient(145deg, rgba(15,20,35,0.8) 0%, rgba(139,92,246,0.05) 100%);">
+      <h2 style="margin-top: 0; text-align: center;">Assessment Model & Typology</h2>
+      <p style="text-align: center; color: #94a3b8; max-width: 700px; margin: 0 auto 2rem;">Student performance is comprehensively evaluated through Unit Tests, Mid-Term Examination, Practical Examination, Internal Assessment, and the Final Board Examination.</p>
+      
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+          <h4 style="color: #a78bfa; border-bottom: 1px solid rgba(139,92,246,0.2); padding-bottom: 0.5rem;">Internal & Practical Assessment</h4>
+          <ul style="color: #cbd5e1; columns: 2; -webkit-columns: 2; gap: 1rem; padding-left: 1rem;">
+            <li>Laboratory Records</li>
+            <li>Experimental Analysis</li>
+            <li>Observation Skills</li>
+            <li>Project Demonstration</li>
+            <li>Viva Voce</li>
+            <li>Research Activities</li>
+            <li>Seminars</li>
+            <li>Classroom Participation</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #60a5fa; border-bottom: 1px solid rgba(59,130,246,0.2); padding-bottom: 0.5rem;">Question Typology</h4>
+          <ul style="color: #cbd5e1; columns: 2; -webkit-columns: 2; gap: 1rem; padding-left: 1rem; font-size: 0.9rem;">
+            <li>Multiple Choice (MCQs)</li>
+            <li>Assertion–Reason</li>
+            <li>Numerical Problems</li>
+            <li>Case Study Questions</li>
+            <li>Data Interpretation</li>
+            <li>Graph-Based Questions</li>
+            <li>HOTS & Application</li>
+            <li>Research-Based Questions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem;">
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #3b82f6;">
+        <h3 style="margin-top: 0;">Digital Education</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Smart Classrooms & E-Learning</li>
+          <li>Digital Laboratory Resources</li>
+          <li>Virtual Experiments</li>
+          <li>AI Learning Tools</li>
+          <li>Digital Library & Portal</li>
+        </ul>
+      </div>
+      
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #ef4444;">
+        <h3 style="margin-top: 0;">Examination Security</h3>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Encrypted Question Papers</li>
+          <li>QR-Code Answer Booklets</li>
+          <li>CCTV & Biometric Attendance</li>
+          <li>AI-Based Malpractice Detection</li>
+          <li>Digital Evaluation Tracking</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel" style="padding: 2rem; border-top: 3px solid #eab308;">
+        <h3 style="margin-top: 0;">University Preparation</h3>
+        <p style="font-size: 0.9rem; color: #cbd5e1;">Designed to prepare students for:</p>
+        <ul style="color: #94a3b8; padding-left: 1.2rem;">
+          <li>Engineering & Medical Sciences</li>
+          <li>AI, Data Science & Computer Science</li>
+          <li>Research & Biotechnology</li>
+          <li>Civil & Defence Services</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin-top: 4rem; text-align: center;">
+    <div class="glass-panel" style="padding: 3rem 2rem; max-width: 600px; margin: 0 auto;">
+      <span class="eyebrow" style="color: #fbbf24; margin-bottom: 0.5rem; display: block;">Schedule</span>
+      <h3 style="margin-top: 0;">Important Dates</h3>
+      <p style="color: #94a3b8; margin-bottom: 2rem;">The official schedule for the KSPUEAB examinations has been moved to a dedicated page.</p>
+      <a href="/KSPUEAB_Dates.html" class="btn primary">View KSPUEAB Dates</a>
+    </div>
+  </section>
+</main>
+{% endblock %}
+"""
+
+def main():
+    os.chdir(r"e:\Sushanth Projects\SURYA\templates")
+    with open("KSPUEAB.html", "w", encoding="utf-8") as f:
+        f.write(HTML_CONTENT)
+    print("Updated KSPUEAB.html with comprehensive PUC curriculum data successfully.")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - SURYA EDUCATION BOARD{% endblock %}
+
+{% block content %}
+<main>
+  <section class="page-hero contact-hero">
+    <div class="wrap">
+      <div class="hero-panel reveal">
+        <span class="eyebrow">Get in touch</span>
+        <h1>Need help with registration, resources, or exam support?</h1>
+        <p>Reach out to the SURYA team for candidate guidance, partner enquiries, and exam-day assistance.</p>
+        <div class="hero-badges">
+          <div class="badge">
+            <strong>Official support</strong>
+            <span>Admission queries, schedule updates and document help</span>
+          </div>
+          <div class="badge">
+            <strong>Fast response</strong>
+            <span>Our help desk is available on government working days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap contact-page">
+    <aside class="helpdesk reveal">
+      <div class="panel-label">Help Desk</div>
+      <h2>Contact the SURYA team</h2>
+      <p>Office hours and direct support contacts for registration, results and general exam enquiries.</p>
+
+      <div class="contact-detail">
+        <span>Phone</span>
+        <strong>+91 83100 34078</strong>
+      </div>
+      <div class="contact-detail">
+        <span>Email</span>
+        <strong>orgsurya@sit.ac.in</strong>
+        <strong>orgset@sit.ac.in</strong>
+      </div>
+      <div class="contact-detail">
+        <span>Hours</span>
+        <strong>Mon–Fri 10:00–13:00, 14:00–17:30</strong>
+      </div>
+
+      <div class="info-card">
+        <h4>Office address</h4>
+        <p>Organising Chairperson, SET Examination 2024<br>
+        SET Office, SIT Kengeri, Bengaluru-560060</p>
+      </div>
+    </aside>
+
+    <article class="contact-form-card reveal">
+      <div class="panel-label">Send a message</div>
+      <h2>Tell us how we can help</h2>
+      <form id="contact-form" class="contact-form" method="post" action="/contact">
+        <label for="name">Your name</label>
+        <input id="name" name="name" required>
+
+        <label for="email">Your email</label>
+        <input id="email" name="email" type="email" required>
+
+        <label for="subject">Subject</label>
+        <input id="subject" name="subject" required>
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+
+        <button class="btn primary" type="submit">Send message</button>
+        <div id="form-status" class="form-status" aria-live="polite"></div>
+      </form>
+    </article>
+  </section>
+</main>
+{% endblock %}

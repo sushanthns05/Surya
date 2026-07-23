@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "surya-4f39a"
+  },
+  "targets": {
+    "surya-4f39a": {
+      "hosting": {
+        "secondsite": [
+          "my-second-app"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

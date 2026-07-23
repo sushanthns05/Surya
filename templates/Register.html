@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Examination Registration Hub — SURYA EDUCATION BOARD{% endblock %}
+
+{% block content %}
+<main>
+  <section class="page-hero contact-hero" style="background: linear-gradient(135deg, rgba(15,20,35,0.9), rgba(10,15,30,0.95)), url('/assets/images/campus-bg.jpg') center/cover;">
+    <div class="wrap">
+      <div class="hero-panel reveal">
+        <span class="eyebrow" style="color: #60a5fa;">SOERS Portal</span>
+        <h1>Registration Hub</h1>
+        <p>Welcome to the Surya Online Examination Registration System (SOERS). Please select the examination you wish to apply for to proceed to its dedicated registration portal.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal" style="margin: 4rem auto;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+      
+      <!-- SET -->
+      <a href="/Register_SET.html" id="link-set" style="text-decoration: none; position: relative;">
+        <div class="glass-panel" style="padding: 2rem; transition: 0.3s; height: 100%; border: 1px solid rgba(59,130,246,0.3);">
+          <div class="status-badge" id="badge-set">Checking...</div>
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; color: #3b82f6;">📝</div>
+          <h3 style="color: #60a5fa; margin-bottom: 0.5rem; margin-top: 0;">Surya Entrance Test (SET)</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem;">Register for the national-level engineering and architecture entrance examination (Sessions 01 & 02).</p>
+        </div>
+      </a>
+
+      <!-- SST -->
+      <a href="/Register_SST.html" id="link-sst" style="text-decoration: none; position: relative;">
+        <div class="glass-panel" style="padding: 2rem; transition: 0.3s; height: 100%; border: 1px solid rgba(139,92,246,0.3);">
+          <div class="status-badge" id="badge-sst">Checking...</div>
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(139,92,246,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; color: #8b5cf6;">🏆</div>
+          <h3 style="color: #c084fc; margin-bottom: 0.5rem; margin-top: 0;">Surya Scholarship Test (SST)</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem;">Apply for the national-level scholarship examination for Class IX to M.Tech students.</p>
+        </div>
+      </a>
+
+      <!-- SAT -->
+      <a href="/Register_SAT.html" id="link-sat" style="text-decoration: none; position: relative;">
+        <div class="glass-panel" style="padding: 2rem; transition: 0.3s; height: 100%; border: 1px solid rgba(16,185,129,0.3);">
+          <div class="status-badge" id="badge-sat">Checking...</div>
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(16,185,129,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; color: #10b981;">🎓</div>
+          <h3 style="color: #34d399; margin-bottom: 0.5rem; margin-top: 0;">Surya Admission Test (SAT)</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem;">Register for standard undergraduate and postgraduate admissions across Surya Institutions.</p>
+        </div>
+      </a>
+
+      <!-- SME -->
+      <a href="/Register_SME.html" id="link-sme" style="text-decoration: none; position: relative;">
+        <div class="glass-panel" style="padding: 2rem; transition: 0.3s; height: 100%; border: 1px solid rgba(244,63,94,0.3);">
+          <div class="status-badge" id="badge-sme">Checking...</div>
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(244,63,94,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; color: #f43f5e;">⚕️</div>
+          <h3 style="color: #fb7185; margin-bottom: 0.5rem; margin-top: 0;">Surya Medical Examination (SME)</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem;">Apply for the national-level medical entrance examination for MBBS and BDS programs.</p>
+        </div>
+      </a>
+
+      <!-- SA -->
+      <a href="/Register_SA.html" id="link-sa" style="text-decoration: none; position: relative;">
+        <div class="glass-panel" style="padding: 2rem; transition: 0.3s; height: 100%; border: 1px solid rgba(245,158,11,0.3);">
+          <div class="status-badge" id="badge-sa">Checking...</div>
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(245,158,11,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; color: #f59e0b;">📊</div>
+          <h3 style="color: #fbbf24; margin-bottom: 0.5rem; margin-top: 0;">Surya Accountancy (SA)</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem;">Register for professional accounting certification exams conducted by SIPA.</p>
+        </div>
+      </a>
+
+      <!-- BOARDS -->
+      <a href="/Register_Boards.html" id="link-brd" style="text-decoration: none; position: relative;">
+        <div class="glass-panel" style="padding: 2rem; transition: 0.3s; height: 100%; border: 1px solid rgba(148,163,184,0.3);">
+          <div class="status-badge" id="badge-brd">Checking...</div>
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(148,163,184,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; color: #94a3b8;">🏫</div>
+          <h3 style="color: #cbd5e1; margin-bottom: 0.5rem; margin-top: 0;">Board Examinations</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem;">Register for KSSEAB (10th) and KSPUEAB (PUC) state board examinations.</p>
+        </div>
+      </a>
+    </div>
+
+    <style>
+      .glass-panel:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+      .disabled-link {
+        pointer-events: none;
+        opacity: 0.6;
+      }
+      .disabled-link .glass-panel {
+        border-color: rgba(255,255,255,0.1) !important;
+      }
+      .status-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 2;
+      }
+      .badge-open {
+        background: rgba(16,185,129,0.15);
+        color: #10b981;
+        border: 1px solid rgba(16,185,129,0.3);
+      }
+      .badge-closed {
+        background: rgba(239,68,68,0.15);
+        color: #ef4444;
+        border: 1px solid rgba(239,68,68,0.3);
+      }
+      .badge-upcoming {
+        background: rgba(245,158,11,0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245,158,11,0.3);
+      }
+    </style>
+  </section>
+
+  <script>
+    const schedules = {
+      'set': { start: new Date('2020-01-01T00:00:00'), end: new Date('2020-12-31T23:59:59') },
+      'sst': { start: new Date('2026-08-01T00:00:00'), end: new Date('2026-09-15T23:59:59') },
+      'sat': { start: new Date('2020-01-01T00:00:00'), end: new Date('2020-12-31T23:59:59') },
+      'sme': { start: new Date('2020-01-01T00:00:00'), end: new Date('2020-12-31T23:59:59') },
+      'sa':  { start: new Date('2020-01-01T00:00:00'), end: new Date('2020-12-31T23:59:59') },
+      'brd': { start: new Date('2020-01-01T00:00:00'), end: new Date('2020-12-31T23:59:59') }
+    };
+
+    const now = new Date();
+    
+    Object.keys(schedules).forEach(exam => {
+      const { start, end } = schedules[exam];
+      const badge = document.getElementById(`badge-${exam}`);
+      const link = document.getElementById(`link-${exam}`);
+      
+      if (now < start) {
+        badge.className = 'status-badge badge-upcoming';
+        const dateStr = start.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+        badge.innerText = `Opens ${dateStr}`;
+        link.classList.add('disabled-link');
+      } else if (now > end) {
+        badge.className = 'status-badge badge-closed';
+        badge.innerText = 'Closed';
+        link.classList.add('disabled-link');
+      } else {
+        badge.className = 'status-badge badge-open';
+        badge.innerText = 'Open';
+        link.classList.remove('disabled-link');
+      }
+    });
+  </script>
+</main>
+{% endblock %}
