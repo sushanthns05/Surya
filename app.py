@@ -6,9 +6,15 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, send_from_directory, request, jsonify, Response, abort, session, redirect
+from flask_cors import CORS
 
 app = Flask(__name__, template_folder='public/templates', static_folder='public/assets')
+CORS(app, supports_credentials=True) # Allow cross-origin requests from Firebase
 app.secret_key = 'super-secret-key-surya'
+app.config.update(
+    SESSION_COOKIE_SAMESITE='None',
+    SESSION_COOKIE_SECURE=True
+)
 
 # Basic Auth credentials
 ADMIN_USER = 'admin'

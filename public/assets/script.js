@@ -1,3 +1,6 @@
+// TODO: Replace with your actual Render URL once you have it!
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://YOUR-RENDER-APP-URL.onrender.com';
+
 document.addEventListener('DOMContentLoaded', function() {
   const navToggle = document.getElementById('nav-toggle');
   const nav = document.getElementById('site-nav');
@@ -198,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const formData = new FormData(registerForm);
 
-      fetch('/register', {
+      fetch(API_BASE_URL + '/register', {
         method: 'POST',
         body: formData
       })
@@ -278,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const formData = new FormData(contactForm);
 
-      fetch('/contact', {
+      fetch(API_BASE_URL + '/contact', {
         method: 'POST',
         body: formData
       })
@@ -397,10 +400,10 @@ document.addEventListener('DOMContentLoaded', function() {
       formData.append('registration_id', regId);
       formData.append('allocated_center', allocatedCenter);
 
-      fetch('/admin/allocate-center', {
+      fetch(API_BASE_URL + '/admin/allocate-center', {
         method: 'POST',
         body: formData,
-        credentials: 'same-origin'   // ensures session cookie is sent
+        credentials: 'include'       // ensures session cookie is sent cross-origin
       })
       .then(response => response.json().then(data => ({ ok: response.ok, status: response.status, data })))
       .then(({ ok, status, data }) => {
@@ -471,9 +474,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const formData = new FormData(broadcastForm);
 
-      fetch('/admin/broadcast', {
+      fetch(API_BASE_URL + '/admin/broadcast', {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'include'
       })
       .then(response => {
         if (!response.ok) {
