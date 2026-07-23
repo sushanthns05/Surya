@@ -31,8 +31,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   } catch (err) {
     console.error("Schedule Engine Error:", err);
-    btn.textContent = "Error loading schedule";
+    // Handle the case where the user hasn't created a Firestore database yet
+    btn.textContent = "Schedule Not Found";
     btn.disabled = true;
+    btn.style.background = "#4b5563";
+    countdownEl.innerHTML = `<span style="color:var(--seoas-gold); font-size: 0.9em;">(System: Firestore Database is not initialized or access is denied. Please configure it in the Firebase Console and deploy rules.)</span>`;
   }
 });
 
@@ -40,6 +43,15 @@ function setNotAnnounced(btn, countdownEl) {
   btn.textContent = "Coming Soon";
   btn.disabled = true;
   countdownEl.textContent = "Important Dates have not been announced.";
+}
+
+function setClosed(btn, countdownEl) {
+  btn.textContent = "Registration Closed";
+  btn.disabled = true;
+  btn.style.background = "#4b5563"; // Greyed out
+  btn.style.borderColor = "#374151";
+  btn.style.cursor = "not-allowed";
+  countdownEl.innerHTML = `<span style="color:#ef4444; font-size: 1.2rem; font-weight: bold; background: rgba(239,68,68,0.1); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(239,68,68,0.3);">Applications are no longer being accepted.</span>`;
 }
 
 function updateScheduleEngine(schedule, btn, countdownEl) {
@@ -54,11 +66,11 @@ function updateScheduleEngine(schedule, btn, countdownEl) {
   } else if (now >= openTime && now < closeTime) {
     btn.textContent = "Apply Now";
     btn.disabled = false;
+    btn.style.background = "var(--seoas-primary)";
+    btn.style.cursor = "pointer";
     countdownEl.innerHTML = `Registration Open. Closing In: <span style="color:red">${formatTimeLeft(closeTime - now)}</span>`;
   } else if (now >= closeTime) {
-    btn.textContent = "Registration Closed";
-    btn.disabled = true;
-    countdownEl.textContent = "Applications are no longer being accepted.";
+    setClosed(btn, countdownEl);
   } else {
     setNotAnnounced(btn, countdownEl);
   }
