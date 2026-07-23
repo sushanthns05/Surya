@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SEOAS - Registration Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script defer src="/assets/script.js"></script>
+  
+<link rel="stylesheet" href="/assets/seoas.css">
+<script defer src="/assets/seoas.js"></script>
+
+</head>
+<body>
+  <header class="site-header">
+  <div class="wrap" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0;">
+    <a class="brand" href="/index.html" style="display: flex; align-items: center; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.1em;">
+      <svg class="logo-svg" width="32" height="32" viewBox="0 0 32 32" fill="none" style="margin-right: 12px;">
+        <path d="M16 2L6 6v8c0 5.52 4.48 10 10 10s10-4.48 10-10V6L16 2z" fill="url(#logo-grad-header)" />
+        <path d="M16 6a4 4 0 100 8 4 4 0 000-8zm-5 10c0-2 4-3 5-3s5 1 5 3v1H11v-1z" fill="#fff" opacity="0.9" />
+        <defs>
+          <linearGradient id="logo-grad-header" x1="6" y1="2" x2="26" y2="24" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#3b82f6" />
+            <stop offset="1" stop-color="#8b5cf6" />
+          </linearGradient>
+        </defs>
+      </svg>SURYA
+    </a>
+    <button id="nav-toggle" aria-label="Toggle navigation">☰</button>
+    <nav id="site-nav" class="site-nav">
+      <ul style="display: flex; gap: 24px; align-items: center; margin: 0; padding: 0; list-style: none;">
+        <li><a href="/index.html" class="nav-link">Home</a></li>
+        <li><a href="/About.html" class="nav-link">About</a></li>
+        
+        <li class="dropdown mega-dropdown">
+          <a href="#" class="nav-link">Admissions <span class="arrow">▼</span></a>
+          <div class="mega-menu glass-panel">
+            <div class="mega-grid">
+              <div class="mega-col">
+                <h4>Boards</h4>
+                <a href="/KSSEAB.html">KSSEAB</a>
+                <a href="/KSSSCE.html">KSSSCE (10th)</a>
+                <a href="/KSPUEAB.html">KSPUEAB (PUC)</a>
+              </div>
+              <div class="mega-col">
+                <h4>Entrance Exams</h4>
+                <a href="/SME.html">SME (Medical)</a>
+                <a href="/SAT.html">SAT (Admission)</a>
+                <a href="/SA.html">SA (Assessments)</a>
+                <a href="/SST.html">SST (Scholarship)</a>
+                <a href="/SET01.html">SET 01</a>
+                <a href="/SET02.html">SET 02</a>
+              </div>
+              <div class="mega-col mega-promo">
+                <h4>Apply for 2027</h4>
+                <p>Join the next generation of global leaders.</p>
+                <a href="/Register.html" class="btn primary small">Apply for Exams</a>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="dropdown mega-dropdown">
+          <a href="#" class="nav-link">Academics <span class="arrow">▼</span></a>
+          <div class="mega-menu glass-panel">
+            <div class="mega-grid">
+              <div class="mega-col">
+                <h4>Resources</h4>
+                <a href="/Resources.html">Digital Library</a>
+                <a href="/Articles.html">Articles</a>
+                <a href="/SATSyllabus.html">SAT Syllabus</a>
+              </div>
+              <div class="mega-col">
+                <h4>Quick Links</h4>
+                <a href="/admin.html">Admin Console</a>
+                <a href="/SET_Exam_Portal_Session01.html">Practice SET-01</a>
+                <a href="/SET_Exam_Portal_Session02.html">Practice SET-02</a>
+              </div>
+            </div>
+          </div>
+        </li>
+
+
+        <li><a href="/Contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
+      <button id="btn-search" class="icon-btn" aria-label="Search">🔍</button>
+      <button id="btn-theme" class="icon-btn" aria-label="Dark Mode">🌓</button>
+      <a class="btn primary" href="/Register.html" style="box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">Apply Now</a>
+    </div>
+  </div>
+</header>
+
+<div id="search-overlay" class="search-overlay">
+  <div class="search-container">
+    <button id="close-search" class="close-btn" aria-label="Close search">✖</button>
+    <input type="text" id="search-input" class="search-input" placeholder="Search SURYA..." autocomplete="off">
+    <button class="btn primary search-submit">Search</button>
+  </div>
+</div>
+<style>
+/* Mega Menu & Premium Header Overrides */
+.search-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(10, 15, 30, 0.95); backdrop-filter: blur(20px);
+  z-index: 1000; display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: all 0.3s ease;
+}
+.search-overlay.active { opacity: 1; visibility: visible; }
+.search-container { position: relative; width: 100%; max-width: 600px; display: flex; gap: 10px; padding: 0 20px; }
+.search-input { flex: 1; background: transparent; border: none; border-bottom: 2px solid #3b82f6; color: #fff; font-size: 2rem; padding: 10px 0; outline: none; }
+.close-btn { position: absolute; top: -50px; right: 20px; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; transition: 0.3s; }
+.close-btn:hover { color: #ef4444; transform: rotate(90deg); }
+
+.site-header {
+  background: rgba(10, 15, 30, 0.65) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+}
+.nav-link {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  transition: all 0.3s ease;
+}
+.nav-link:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+.icon-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.3s;
+}
+.icon-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+.site-nav ul li.mega-dropdown {
+  position: static;
+}
+
+.mega-dropdown:hover .mega-menu {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+.mega-menu {
+  position: absolute; top: 100%; left: 0; width: 100%;
+  background: rgba(15, 20, 35, 0.95);
+  backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  opacity: 0; visibility: hidden; transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 40px 0; z-index: 100;
+}
+.mega-grid {
+  display: flex; max-width: 1180px; margin: 0 auto; gap: 40px; justify-content: center;
+}
+.mega-col { display: flex; flex-direction: column; gap: 12px; min-width: 200px; }
+.mega-col h4 { color: #8b5cf6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+.mega-col a { color: rgba(255,255,255,0.7); font-size: 0.95rem; transition: all 0.2s; }
+.mega-col a:hover { color: #fff; transform: translateX(5px); }
+.mega-promo { background: rgba(59,130,246,0.1); padding: 24px; border-radius: 16px; border: 1px solid rgba(59,130,246,0.2); }
+.mega-promo p { color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px; }
+</style>
+
+  
+<main class="seoas-portal">
+  <!-- Ticker -->
+  <div class="seoas-ticker">
+    <div class="ticker-content">
+      <strong>Latest Announcements:</strong> Registration for 2027-2028 is now open. Please complete all 10 steps. Correction window opens next month.
+    </div>
+  </div>
+
+  <!-- Hero / Notice Panel -->
+  <section class="seoas-hero reveal" id="seoas-home">
+    <div class="wrap seoas-hero-grid">
+      <div class="hero-text">
+        <span class="eyebrow">SURYA EDUCATION BOARD</span>
+        <h1>ONLINE APPLICATION PORTAL</h1>
+        <p class="subtitle">"One Portal. Multiple Examinations."</p>
+        <div class="hero-actions">
+          <button class="seoas-btn btn-primary" onclick="startRegistration()">New Registration</button>
+          <button class="seoas-btn btn-secondary">Existing Login</button>
+          <button class="seoas-btn btn-outline">Info Bulletin</button>
+        </div>
+      </div>
+      <div class="glass-notice-panel">
+        <h3>Important Dates</h3>
+        <ul>
+          <li><strong>Registration Open:</strong> Today</li>
+          <li><strong>Last Date:</strong> 30th Next Month</li>
+          <li><strong>Correction Window:</strong> +15 Days</li>
+          <li><strong>Admit Card:</strong> -10 Days before exam</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Registration Wizard Container -->
+  <section class="wrap seoas-wizard-container" id="registration-wizard" style="display: none;">
+    
+    <!-- Progress Bar -->
+    <div class="seoas-progress">
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="step-indicators" id="step-indicators">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
+    <!-- Step Forms -->
+    <form id="seoas-form" novalidate>
+      
+      <!-- STEP 1: Account Registration -->
+      <div class="wizard-step" data-step="1">
+        <h2>Step 1: Account Registration</h2>
+        <div class="glass-card form-grid">
+          <div class="form-group">
+            <label>Candidate Name</label>
+            <input type="text" id="reg-name" required>
+          </div>
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <div class="input-with-btn">
+              <input type="tel" id="reg-mobile" required>
+              <button type="button" class="btn-sm btn-outline" onclick="mockVerify('Mobile')">Verify</button>
+            </div>
+            <span class="verify-status" id="mobile-status"></span>
+          </div>
+          <div class="form-group">
+            <label>Email ID</label>
+            <div class="input-with-btn">
+              <input type="email" id="reg-email" required>
+              <button type="button" class="btn-sm btn-outline" onclick="mockVerify('Email')">Verify</button>
+            </div>
+            <span class="verify-status" id="email-status"></span>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="reg-pass" required>
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="reg-pass2" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: Personal Details -->
+      <div class="wizard-step" data-step="2">
+        <h2>Step 2: Personal Details</h2>
+        <div class="glass-card form-grid">
+          <div class="form-group"><label>Gender</label><select id="pd-gender" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+          <div class="form-group"><label>Date of Birth</label><input type="date" id="pd-dob" required></div>
+          <div class="form-group"><label>Nationality</label><input type="text" value="Indian" readonly></div>
+          <div class="form-group"><label>Government ID (Aadhaar)</label><input type="text" id="pd-id" required></div>
+          <div class="form-group"><label>Category</label><select id="pd-cat" required><option value="">Select</option><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
+          <div class="form-group"><label>PwD Status</label><select id="pd-pwd" required><option>No</option><option>Yes</option></select></div>
+          
+          <h3 class="section-title">Parents</h3>
+          <div class="form-group"><label>Father's Name</label><input type="text" required></div>
+          <div class="form-group"><label>Mother's Name</label><input type="text" required></div>
+          <div class="form-group"><label>Annual Income</label><select><option>< 1 Lakh</option><option>1-5 Lakhs</option><option>> 5 Lakhs</option></select></div>
+
+          <h3 class="section-title">Address</h3>
+          <div class="form-group" style="grid-column: span 2;"><label>Permanent Address</label><textarea required></textarea></div>
+          <div class="form-group"><label>State</label><input type="text" required></div>
+          <div class="form-group"><label>District</label><input type="text" required></div>
+          <div class="form-group"><label>PIN Code</label><input type="text" required></div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Identity Verification -->
+      <div class="wizard-step" data-step="3">
+        <h2>Step 3: Identity Verification</h2>
+        <div class="glass-card">
+          <p>Please upload your Government ID for automated verification.</p>
+          <div class="upload-area" id="id-upload-area">
+            <input type="file" id="id-file" accept="image/*,.pdf" class="hidden-input" onchange="handleFileUpload(this, 'id-preview')">
+            <label for="id-file" class="upload-label">
+              <span class="upload-icon">📄</span>
+              <span>Drag & Drop or Click to Upload Aadhaar/Gov ID</span>
+            </label>
+          </div>
+          <div id="id-preview" class="file-preview"></div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Academic Details -->
+      <div class="wizard-step" data-step="4">
+        <h2>Step 4: Academic Details</h2>
+        <div class="glass-card">
+          <p class="mb-4">Your academic fields will dynamically adjust based on your exam selection.</p>
+          <div class="form-grid" id="dynamic-academic-fields">
+             <div class="form-group"><label>Class X Board</label><input type="text" required></div>
+             <div class="form-group"><label>Class X Passing Year</label><input type="number" required></div>
+             <div class="form-group"><label>Class X Marks (%)</label><input type="text" required></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5: Examination Details -->
+      <div class="wizard-step" data-step="5">
+        <h2>Step 5: Examination Details</h2>
+        <div class="glass-card form-grid">
+          <div class="form-group">
+            <label>Select Examination</label>
+            <select id="exam-select" required onchange="updateDynamicFields()">
+              <option value="">Select Exam</option>
+              <option value="SET">Surya Entrance Test (SET)</option>
+              <option value="SST">Surya Scholarship Test (SST)</option>
+              <option value="SA">Surya Assessment (SA)</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Medium of Examination</label><select required><option>English</option><option>Hindi</option><option>Kannada</option></select></div>
+          
+          <h3 class="section-title">Preferred Centres</h3>
+          <div class="form-group"><label>Preference 1</label><input type="text" required></div>
+          <div class="form-group"><label>Preference 2</label><input type="text" required></div>
+        </div>
+      </div>
+
+      <!-- STEP 6: Document Upload -->
+      <div class="wizard-step" data-step="6">
+        <h2>Step 6: Document Upload</h2>
+        <div class="glass-card upload-grid">
+          <div class="doc-upload-box">
+             <h4>Passport Photograph</h4>
+             <input type="file" onchange="previewImage(this, 'photo-img-preview')">
+             <img id="photo-img-preview" class="image-preview" src="" alt="">
+          </div>
+          <div class="doc-upload-box">
+             <h4>Signature</h4>
+             <input type="file" onchange="previewImage(this, 'sign-img-preview')">
+             <img id="sign-img-preview" class="image-preview" src="" alt="">
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7: Review Application -->
+      <div class="wizard-step" data-step="7">
+        <h2>Step 7: Review Application</h2>
+        <div class="glass-card review-section">
+          <p class="mb-4 text-emerald">Please verify all details.</p>
+          <div class="review-grid" id="review-content">
+             <!-- JS will populate summary -->
+          </div>
+          <div class="declaration mt-4">
+             <label><input type="checkbox" id="declare-check"> I confirm all information is correct.</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 8: Fee Payment -->
+      <div class="wizard-step" data-step="8">
+        <h2>Step 8: Fee Payment</h2>
+        <div class="glass-card">
+          <div class="payment-summary mb-4">
+            <h3>Total Payable: <span class="text-gold">₹1000.00</span></h3>
+          </div>
+          <div class="payment-options form-grid">
+            <button type="button" class="seoas-btn btn-outline" onclick="mockPayment('UPI')">Pay via UPI</button>
+            <button type="button" class="seoas-btn btn-outline" onclick="mockPayment('Card')">Pay via Card</button>
+          </div>
+          <div id="payment-status" class="mt-4 verify-status"></div>
+        </div>
+      </div>
+
+      <!-- STEP 9: Final Submission -->
+      <div class="wizard-step" data-step="9">
+        <h2>Step 9: Final Submission</h2>
+        <div class="glass-card text-center">
+          <h3 class="mb-4">Ready to submit?</h3>
+          <button type="button" class="seoas-btn btn-primary" onclick="finalSubmit()">Submit Application Now</button>
+        </div>
+      </div>
+
+      <!-- STEP 10: Confirmation Page -->
+      <div class="wizard-step" data-step="10">
+        <div class="glass-card text-center confirmation-card">
+          <div class="success-icon" style="font-size: 4rem; color: var(--emerald-500);">✅</div>
+          <h2>Application Submitted Successfully!</h2>
+          <div class="confirmation-details form-grid text-left mt-4">
+            <div><strong>Application No:</strong> <span class="text-emerald" id="conf-app-no">SEOAS-XXXXXXXX</span></div>
+            <div><strong>Name:</strong> <span id="conf-name"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wizard Navigation -->
+      <div class="wizard-actions mt-4" style="display: flex;">
+        <button type="button" class="seoas-btn btn-outline" id="btn-prev" onclick="prevStep()" style="display:none;">Back</button>
+        <span class="spacer" style="flex-grow: 1;"></span>
+        <button type="button" class="seoas-btn btn-primary" id="btn-next" onclick="nextStep()" style="display:none;">Save & Next</button>
+      </div>
+
+    </form>
+  </section>
+
+</main>
+
+
+  <footer class="site-footer wrap">
+  <div class="footer-cta">
+    <div>
+      <h3>Ready to elevate your exam journey?</h3>
+      <p>Register for board and entrance examinations online in just a few minutes.</p>
+    </div>
+    <a class="btn primary" href="/Register.html">Register for Exams</a>
+  </div>
+
+  <div class="footer-grid">
+    <div class="footer-brand-section">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+        <svg class="logo-svg" width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 2L6 6v8c0 5.52 4.48 10 10 10s10-4.48 10-10V6L16 2z" fill="url(#logo-grad-footer)" />
+          <path d="M16 6a4 4 0 100 8 4 4 0 000-8zm-5 10c0-2 4-3 5-3s5 1 5 3v1H11v-1z" fill="#fff" opacity="0.9" />
+          <defs>
+            <linearGradient id="logo-grad-footer" x1="6" y1="2" x2="26" y2="24" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#60a5fa" />
+              <stop offset="1" stop-color="#a78bfa" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span style="font-weight: 700; font-size: 1.1rem; color: #fff; letter-spacing: 0.05em;">SURYA BOARD</span>
+      </div>
+      <p style="color: rgba(248, 250, 252, 0.75); line-height: 1.6; max-width: 320px;">
+        SURYA GROUP OF INDUSTRIES<br>
+        47, 7th Main, Kengeri Satellite Town, Bengaluru-560060
+      </p>
+    </div>
+
+  <div class="footer-legal">
+    <p>© 2027 SURYA EDUCATION BOARD. All rights reserved.</p>
+    <p>Modern exam administration built for clarity, trust, and student success.</p>
+  </div>
+</footer>
+
+</body>
+</html>

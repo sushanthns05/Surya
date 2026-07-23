@@ -1,0 +1,219 @@
+/* seoas.css */
+:root {
+  --seoas-blue: #1e3a8a;
+  --seoas-blue-light: #3b82f6;
+  --seoas-emerald: #10b981;
+  --seoas-gold: #fbbf24;
+  --seoas-white: #ffffff;
+  --seoas-bg: #f8fafc;
+  --seoas-text: #1e293b;
+  --seoas-text-light: #64748b;
+  --seoas-border: #e2e8f0;
+  
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px rgba(30, 58, 138, 0.1);
+  --radius: 18px;
+}
+
+.dark-theme {
+  --seoas-bg: #0f172a;
+  --seoas-text: #f8fafc;
+  --seoas-text-light: #94a3b8;
+  --seoas-border: #334155;
+  --glass-bg: rgba(30, 41, 59, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.seoas-portal {
+  background: var(--seoas-bg);
+  color: var(--seoas-text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Floating Background Shapes */
+.seoas-portal::before, .seoas-portal::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  opacity: 0.5;
+}
+.seoas-portal::before {
+  top: -10%; left: -10%;
+  width: 500px; height: 500px;
+  background: var(--seoas-blue-light);
+}
+.seoas-portal::after {
+  bottom: -10%; right: -10%;
+  width: 600px; height: 600px;
+  background: var(--seoas-emerald);
+}
+
+/* Ticker */
+.seoas-ticker {
+  background: var(--seoas-blue);
+  color: white;
+  padding: 8px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+.ticker-content {
+  white-space: nowrap;
+  animation: ticker 20s linear infinite;
+}
+@keyframes ticker {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Hero Section */
+.seoas-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 4rem 1rem;
+  position: relative;
+  z-index: 10;
+}
+.seoas-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--seoas-blue);
+  margin-bottom: 0.5rem;
+}
+.dark-theme .seoas-hero h1 {
+  color: var(--seoas-blue-light);
+}
+
+/* Buttons */
+.seoas-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+.btn-primary {
+  background: var(--seoas-blue);
+  color: white;
+}
+.btn-primary:hover {
+  background: var(--seoas-blue-light);
+  transform: translateY(-2px);
+}
+.btn-secondary {
+  background: var(--seoas-emerald);
+  color: white;
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--seoas-blue);
+  color: var(--seoas-blue);
+}
+.dark-theme .btn-outline {
+  border-color: var(--seoas-blue-light);
+  color: var(--seoas-blue-light);
+}
+
+/* Glassmorphism Cards */
+.glass-card, .glass-notice-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--glass-shadow);
+  padding: 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+/* Wizard Steps */
+.wizard-step {
+  display: none;
+  animation: fadeIn 0.4s ease forwards;
+}
+.wizard-step.active {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--seoas-text);
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--seoas-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--seoas-text);
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--seoas-blue-light);
+}
+
+/* Progress Bar */
+.seoas-progress {
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
+}
+.progress-track {
+  height: 8px;
+  background: var(--seoas-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--seoas-emerald);
+  width: 10%;
+  transition: width 0.4s ease;
+}
+
+.text-emerald { color: var(--seoas-emerald); }
+.text-gold { color: var(--seoas-gold); font-size: 1.5rem; font-weight: bold;}
+.mb-4 { margin-bottom: 1rem; }
+.mt-4 { margin-top: 1rem; }
+.text-center { text-align: center; }
+
+/* File Upload */
+.upload-area {
+  border: 2px dashed var(--seoas-blue-light);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.upload-area:hover {
+  background: rgba(59, 130, 246, 0.05);
+}
+.hidden-input { display: none; }
+.image-preview { max-width: 100%; height: auto; border-radius: 8px; display: none; margin-top: 1rem; }

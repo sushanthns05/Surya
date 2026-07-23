@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}SEOAS - Candidate Dashboard{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/assets/seoas.css">
+<style>
+  .dashboard-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s;
+    text-align: center;
+  }
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+  }
+  .dashboard-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--seoas-emerald);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="seoas-portal">
+  
+  <!-- Login Section -->
+  <section class="wrap" id="dashboard-login" style="padding: 4rem 1rem; max-width: 500px; margin: 0 auto;">
+    <div class="glass-card text-center">
+      <h2 style="color: var(--seoas-blue); margin-bottom: 1rem;">Candidate Login</h2>
+      <p style="margin-bottom: 2rem;">Enter your Application Number to access your dashboard.</p>
+      
+      <form id="candidate-login-form" onsubmit="handleLogin(event)">
+        <div class="form-group text-left">
+          <label>Application Number</label>
+          <input type="text" id="login-app-no" required placeholder="e.g. SEOAS1712345678">
+        </div>
+        <div class="form-group text-left" style="margin-top: 1rem;">
+          <label>Password or DOB</label>
+          <input type="password" id="login-pass" required>
+        </div>
+        <div id="login-error" style="color: #ef4444; margin-top: 1rem; display: none;">Invalid credentials. Try again.</div>
+        <button type="submit" class="seoas-btn btn-primary" style="width: 100%; margin-top: 2rem;" id="login-btn">Login</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Dashboard Section -->
+  <section class="wrap" id="dashboard-view" style="display: none; padding: 4rem 1rem;">
+    
+    <div class="glass-notice-panel" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2 style="color: var(--seoas-blue); margin-bottom: 0.5rem;">Welcome, <span id="dash-name">Candidate</span></h2>
+        <p>Application No: <strong id="dash-app-no"></strong></p>
+      </div>
+      <button class="seoas-btn btn-outline" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="form-grid">
+      <!-- Application Status -->
+      <div class="dashboard-card">
+        <div class="dashboard-icon">📝</div>
+        <h3>My Application</h3>
+        <p style="margin: 1rem 0;">View your submitted application details and payment receipt.</p>
+        <span class="status-badge">Submitted</span>
+        <button class="seoas-btn btn-outline" style="width: 100%; margin-top: 1rem;">View Details</button>
+      </div>
+
+      <!-- Admit Card -->
+      <div class="dashboard-card">
+        <div class="dashboard-icon">🎫</div>
+        <h3>Admit Card</h3>
+        <p style="margin: 1rem 0;">Download your examination admit card and hall ticket.</p>
+        <span class="status-badge" style="background: rgba(251, 191, 36, 0.1); color: var(--seoas-gold);">Coming Soon</span>
+        <button class="seoas-btn btn-outline" style="width: 100%; margin-top: 1rem;" disabled>Download</button>
+      </div>
+
+      <!-- Exam City Intimation -->
+      <div class="dashboard-card">
+        <div class="dashboard-icon">🏙️</div>
+        <h3>City Intimation</h3>
+        <p style="margin: 1rem 0;">Check your allocated examination city and center details.</p>
+        <span class="status-badge" style="background: rgba(251, 191, 36, 0.1); color: var(--seoas-gold);">Coming Soon</span>
+        <button class="seoas-btn btn-outline" style="width: 100%; margin-top: 1rem;" disabled>Check Center</button>
+      </div>
+
+      <!-- Results -->
+      <div class="dashboard-card">
+        <div class="dashboard-icon">📊</div>
+        <h3>Results & Rank</h3>
+        <p style="margin: 1rem 0;">View your examination scores, response sheet, and rank card.</p>
+        <span class="status-badge" style="background: rgba(251, 191, 36, 0.1); color: var(--seoas-gold);">To be Announced</span>
+        <button class="seoas-btn btn-outline" style="width: 100%; margin-top: 1rem;" disabled>View Results</button>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+  // Simple Mock Login Logic for Phase 2 UI Demonstration
+  function handleLogin(e) {
+    e.preventDefault();
+    const appNo = document.getElementById('login-app-no').value;
+    const btn = document.getElementById('login-btn');
+    
+    btn.textContent = 'Verifying...';
+    btn.disabled = true;
+
+    // Simulate network delay
+    setTimeout(() => {
+      if (appNo.startsWith('SEOAS')) {
+        document.getElementById('dashboard-login').style.display = 'none';
+        document.getElementById('dashboard-view').style.display = 'block';
+        document.getElementById('dash-app-no').textContent = appNo;
+        document.getElementById('dash-name').textContent = 'Candidate';
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+      btn.textContent = 'Login';
+      btn.disabled = false;
+    }, 1000);
+  }
+
+  function logout() {
+    document.getElementById('dashboard-login').style.display = 'block';
+    document.getElementById('dashboard-view').style.display = 'none';
+    document.getElementById('login-app-no').value = '';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-error').style.display = 'none';
+  }
+</script>
+{% endblock %}

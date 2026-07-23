@@ -1,5 +1,6 @@
 import os
 import csv
+import json
 import smtplib
 from datetime import datetime
 from email.mime.text import MIMEText
@@ -161,6 +162,42 @@ def home():
     return jsonify({"status": "Surya Backend API is running. Please access the frontend via Firebase."})
 
 # API routes
+@app.route('/api/seoas-register', methods=['POST'])
+def seoas_register():
+    import time
+    app_no = f"SEOAS{int(time.time())}"
+    
+    # Parse text data
+    try:
+        data_str = request.form.get('data', '{}')
+        data = json.loads(data_str)
+    except Exception as e:
+        return jsonify({"status": "error", "message": "Invalid JSON data"}), 400
+        
+    data['application_number'] = app_no
+    data['timestamp'] = datetime.now().isoformat()
+    
+    # Handle files
+    upload_dir = os.path.join('public', 'uploads', app_no)
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    for key in request.files:
+        file = request.files[key]
+        if file.filename:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(upload_dir, filename)
+            file.save(filepath)
+            data[f'file_{key}'] = f'/uploads/{app_no}/{filename}'
+            
+    # Save to JSON-Lines
+    try:
+        with open('seoas_registrations.jsonl', 'a', encoding='utf-8') as f:
+            f.write(json.dumps(data) + '\n')
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+        
+    return jsonify({"status": "ok", "application_number": app_no, "message": "Application submitted successfully"})
+
 @app.route('/register', methods=['POST'])
 def handle_register():
     return jsonify(status='error', message='Registrations for 2027 exams is not yet announced/open.'), 403
