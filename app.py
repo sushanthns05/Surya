@@ -155,75 +155,10 @@ def send_assets(path):
 def send_uploads(path):
     return send_from_directory('public/uploads', path)
 
-# Page Routes
+# API Root Health Check
 @app.route('/')
-@app.route('/index.html')
 def home():
-    return render_template('Surya.html', registration_closed=True, show_header_rules=False)
-
-@app.route('/About.html')
-def about():
-    return render_template('About.html', registration_closed=True)
-
-@app.route('/Contact.html')
-def contact():
-    return render_template('Contact.html', registration_closed=True)
-
-@app.route('/ImportantDates.html')
-def important_dates():
-    return render_template('ImportantDates.html', registration_closed=True)
-
-@app.route('/Resources.html')
-def resources():
-    return render_template('Resources.html', registration_closed=True)
-
-@app.route('/Articles.html')
-def articles():
-    return render_template('Articles.html', registration_closed=True)
-
-@app.route('/SET01.html')
-def set01():
-    return render_template('SET01.html', registration_closed=True)
-
-@app.route('/SET02.html')
-def set02():
-    return render_template('SET02.html', registration_closed=True)
-
-@app.route('/SET_Session01_Exam_Portal.html')
-def set_exam_portal_01():
-    return render_template('SET_Session01_Exam_Portal.html', registration_closed=True)
-
-@app.route('/SET_Session02_Exam_Portal.html')
-def set_exam_portal_02():
-    return render_template('SET_Session02_Exam_Portal.html', registration_closed=True)
-
-@app.route('/SA.html')
-def sa():
-    return render_template('SA.html', registration_closed=True)
-
-@app.route('/SAT.html')
-def sat():
-    return render_template('SAT.html', registration_closed=True)
-
-@app.route('/SME.html')
-def sme():
-    return render_template('SME.html', registration_closed=True)
-
-@app.route('/KSSEAB.html')
-def ksseab():
-    return render_template('KSSEAB.html', registration_closed=True)
-
-@app.route('/PUC.html')
-def puc():
-    return render_template('PUC.html', registration_closed=True)
-
-@app.route('/10th Standard.html')
-def tenth_standard():
-    return render_template('10th Standard.html', registration_closed=True)
-
-@app.route('/Register.html')
-def register_page():
-    return render_template('Register.html', registration_closed=True)
+    return jsonify({"status": "Surya Backend API is running. Please access the frontend via Firebase."})
 
 # API routes
 @app.route('/register', methods=['POST'])
