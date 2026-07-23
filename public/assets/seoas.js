@@ -1,5 +1,5 @@
 // seoas.js
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://surya-s2f5.onrender.com';
+const SEOAS_API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://surya-s2f5.onrender.com';
 
 
 let currentStep = 1;
@@ -90,57 +90,62 @@ function mockPayment(method) {
   }, 2000);
 }
 
-// Final Submit
-function finalSubmit() {
+// Final Submit (Firebase Firestore + Storage)
+async function finalSubmit() {
   const submitBtn = document.querySelector('.wizard-step[data-step="9"] button');
-  submitBtn.textContent = 'Submitting...';
+  submitBtn.textContent = 'Submitting to Firestore...';
   submitBtn.disabled = true;
 
-  const data = {};
-  const inputs = form.querySelectorAll('input:not([type="file"]), select, textarea');
-  inputs.forEach(input => {
-    if (input.id) data[input.id] = input.value;
-  });
+  try {
+    const data = {};
+    const inputs = form.querySelectorAll('input:not([type="file"]), select, textarea');
+    inputs.forEach(input => {
+      if (input.id) data[input.id] = input.value;
+    });
 
-  const formData = new FormData();
-  formData.append('data', JSON.stringify(data));
+    // Generate unique Application Number
+    const appNumber = 'SEOAS-' + Math.floor(10000000 + Math.random() * 90000000);
+    data.application_number = appNumber;
+    data.submittedAt = new Date().toISOString();
 
-  // Add files
-  const fileInputs = form.querySelectorAll('input[type="file"]');
-  fileInputs.forEach((input, index) => {
-    if (input.files.length > 0) {
-      formData.append(`file_${index}`, input.files[0]);
+    // Upload Files to Firebase Storage
+    const fileInputs = form.querySelectorAll('input[type="file"]');
+    const fileUrls = {};
+    for (let i = 0; i < fileInputs.length; i++) {
+      const input = fileInputs[i];
+      if (input.files.length > 0) {
+        const file = input.files[0];
+        submitBtn.textContent = `Uploading ${file.name}...`;
+        const storageRef = firebase.storage().ref(`uploads/${appNumber}/${file.name}`);
+        await storageRef.put(file);
+        const url = await storageRef.getDownloadURL();
+        fileUrls[input.id || `file_${i}`] = url;
+      }
     }
-  });
+    data.files = fileUrls;
 
-  fetch(API_BASE_URL + '/api/seoas-register', {
-    method: 'POST',
-    body: formData
-  })
-  .then(res => res.json())
-  .then(resData => {
-    if (resData.status === 'ok') {
-      const name = document.getElementById('reg-name').value || 'Candidate';
-      document.getElementById('conf-name').textContent = name;
-      document.getElementById('conf-app-no').textContent = resData.application_number;
-      nextStep(); // Go to step 10
-      localStorage.removeItem('seoas-draft'); // Clear auto-save
-    } else {
-      alert("Submission failed: " + resData.message);
-      submitBtn.textContent = 'Submit Application Now';
-      submitBtn.disabled = false;
-    }
-  })
-  .catch(err => {
-    alert("Network error: " + err.message);
+    // Save to Firestore
+    submitBtn.textContent = 'Saving Registration...';
+    await firebase.firestore().collection('seoas_registrations').doc(appNumber).set(data);
+
+    // Success Update
+    const name = document.getElementById('reg-name').value || 'Candidate';
+    document.getElementById('conf-name').textContent = name;
+    document.getElementById('conf-app-no').textContent = appNumber;
+    nextStep(); // Advance to Confirmation
+    localStorage.removeItem('seoas-draft'); // Clear auto-save
+
+  } catch (err) {
+    console.error("Firebase Submit Error: ", err);
+    alert("Submission failed: " + err.message + "\n\n(Note: If permission denied, ensure Firestore/Storage Security Rules allow writes)");
     submitBtn.textContent = 'Submit Application Now';
     submitBtn.disabled = false;
-  });
+  }
 }
 
 // Auto Save
 function autoSave() {
-  if (currentStep >= 10) return;
+  if (currentStep >= 10 || !form) return;
   const data = {};
   const inputs = form.querySelectorAll('input:not([type="file"]), select, textarea');
   inputs.forEach(input => {

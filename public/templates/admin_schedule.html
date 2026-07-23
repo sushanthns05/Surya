@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin - Schedule Management{% endblock %}
+
+{% block head %}
+<!-- Firebase SDK -->
+<script defer src="/__/firebase/10.8.1/firebase-app-compat.js"></script>
+<script defer src="/__/firebase/10.8.1/firebase-firestore-compat.js"></script>
+<script defer src="/__/firebase/init.js"></script>
+
+<style>
+  .admin-panel { max-width: 800px; margin: 40px auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 18px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+  .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; }
+  .btn-save { background: var(--seoas-emerald); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1rem; }
+  .btn-save:hover { filter: brightness(1.1); }
+  .status-msg { margin-top: 15px; text-align: center; font-weight: bold; }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="wrap">
+  <div class="admin-panel">
+    <h2>Enterprise Schedule Management</h2>
+    <p style="color: var(--seoas-gold);">Configure exact dates for automatic state management.</p>
+    
+    <div class="form-group" style="margin-top: 20px;">
+      <label>Select Examination to Configure</label>
+      <select id="schedule-exam-select" onchange="loadSchedule()">
+        <option value="">-- Select Exam --</option>
+        <option value="SET">Surya Entrance Test (SET)</option>
+        <option value="SST">Surya Scholarship Test (SST)</option>
+        <option value="SAT">Surya Aptitude Test (SAT)</option>
+        <option value="SME">Surya Medical Entrance (SME)</option>
+        <option value="SA">Surya Assessment (SA)</option>
+        <option value="BOARDS">Board Examinations</option>
+      </select>
+    </div>
+
+    <form id="schedule-form" style="display:none;" onsubmit="saveSchedule(event)">
+      
+      <div class="form-group">
+        <label>Status</label>
+        <select id="sch-status" required>
+          <option value="Draft">Draft (Hidden)</option>
+          <option value="Published">Published (Active)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Registration Opening Date & Time</label>
+        <input type="datetime-local" id="sch-reg-open" required>
+      </div>
+
+      <div class="form-group">
+        <label>Registration Closing Date & Time</label>
+        <input type="datetime-local" id="sch-reg-close" required>
+      </div>
+
+      <button type="submit" class="btn-save" id="btn-save">Save Schedule to Firestore</button>
+      <div id="save-status" class="status-msg"></div>
+    </form>
+  </div>
+</main>
+
+<script>
+  let currentExam = null;
+
+  async function loadSchedule() {
+    currentExam = document.getElementById('schedule-exam-select').value;
+    const form = document.getElementById('schedule-form');
+    
+    if (!currentExam) {
+      form.style.display = 'none';
+      return;
+    }
+    
+    form.style.display = 'block';
+    document.getElementById('save-status').textContent = 'Loading...';
+    
+    try {
+      const doc = await firebase.firestore().collection('examSchedules').doc(currentExam).get();
+      if (doc.exists) {
+        const data = doc.data();
+        document.getElementById('sch-status').value = data.status || 'Draft';
+        document.getElementById('sch-reg-open').value = data.registrationOpen || '';
+        document.getElementById('sch-reg-close').value = data.registrationClose || '';
+        document.getElementById('save-status').innerHTML = '<span style="color:var(--seoas-emerald);">Loaded successfully.</span>';
+      } else {
+        document.getElementById('schedule-form').reset();
+        document.getElementById('save-status').textContent = 'No existing schedule found. Creating new.';
+      }
+    } catch (err) {
+      document.getElementById('save-status').innerHTML = '<span style="color:red;">Error loading: ' + err.message + '</span>';
+    }
+  }
+
+  async function saveSchedule(e) {
+    e.preventDefault();
+    if (!currentExam) return;
+
+    const btn = document.getElementById('btn-save');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+    
+    const data = {
+      status: document.getElementById('sch-status').value,
+      registrationOpen: document.getElementById('sch-reg-open').value,
+      registrationClose: document.getElementById('sch-reg-close').value,
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      await firebase.firestore().collection('examSchedules').doc(currentExam).set(data);
+      document.getElementById('save-status').innerHTML = '<span style="color:var(--seoas-emerald);">Schedule Saved Successfully!</span>';
+    } catch (err) {
+      document.getElementById('save-status').innerHTML = '<span style="color:red;">Error saving: ' + err.message + '</span>';
+    } finally {
+      btn.textContent = 'Save Schedule to Firestore';
+      btn.disabled = false;
+    }
+  }
+</script>
+{% endblock %}

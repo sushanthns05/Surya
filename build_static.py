@@ -53,6 +53,7 @@ PAGES = [
     ("KSSSCE.html",         "KSSSCE.html"),
     ("Register.html",       "Register.html"),
     ("admin.html",          "admin.html"),
+    ("admin_schedule.html", "admin_schedule.html"),
     ("SET_Session01_Exam_Portal.html", "SET_Session01_Exam_Portal.html"),
     ("SET_Session02_Exam_Portal.html", "SET_Session02_Exam_Portal.html"),
     ("KSPUEAB_Dates.html", "KSPUEAB_Dates.html"),
