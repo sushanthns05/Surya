@@ -163,30 +163,7 @@ function loadAutoSave() {
   }
 }
 
-// Dynamic Academic Fields
-function updateDynamicFields() {
-  const exam = document.getElementById('exam-select').value;
-  const container = document.getElementById('dynamic-academic-fields');
-  
-  if (exam === 'SST') {
-    container.innerHTML = `
-      <div class="form-group"><label>Current Class/Degree</label><select><option>Class IX</option><option>Class X</option><option>PUC</option><option>B.Tech</option></select></div>
-      <div class="form-group"><label>Previous Year Marks (%)</label><input type="text" required></div>
-    `;
-  } else if (exam === 'SA') {
-    container.innerHTML = `
-      <div class="form-group"><label>Degree Name</label><input type="text" required></div>
-      <div class="form-group"><label>University</label><input type="text" required></div>
-    `;
-  } else {
-    // Default SET
-    container.innerHTML = `
-      <div class="form-group"><label>Class X Board</label><input type="text" required></div>
-      <div class="form-group"><label>Class X Passing Year</label><input type="number" required></div>
-      <div class="form-group"><label>Class X Marks (%)</label><input type="text" required></div>
-    `;
-  }
-}
+
 
 // File Preview
 function previewImage(input, previewId) {

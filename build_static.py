@@ -35,7 +35,6 @@ env = Environment(
 # "Surya.html" becomes "index.html" so Firebase serves it at the root URL.
 PAGES = [
     ("CandidateDashboard.html", "CandidateDashboard.html"),
-    ("SEOAS_Registration.html", "SEOAS_Registration.html"),
     ("Surya.html",          "index.html"),
     ("About.html",          "About.html"),
     ("Contact.html",        "Contact.html"),
