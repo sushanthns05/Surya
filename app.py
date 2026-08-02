@@ -208,9 +208,14 @@ def send_otp_email(candidate_email, otp):
             msg['To'] = candidate_email
             msg.attach(MIMEText(email_body, 'html'))
 
-            server = smtplib.SMTP(smtp_host, port)
-            server.starttls()
-            server.login(smtp_user, smtp_pass)
+            if port == 465:
+                server = smtplib.SMTP_SSL(smtp_host, port)
+                server.login(smtp_user, smtp_pass)
+            else:
+                server = smtplib.SMTP(smtp_host, port)
+                server.starttls()
+                server.login(smtp_user, smtp_pass)
+            
             server.sendmail(smtp_user, candidate_email, msg.as_string())
             server.quit()
             print(f"[SMTP LOG] OTP email sent to {candidate_email}", flush=True)
