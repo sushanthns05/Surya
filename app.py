@@ -2,12 +2,17 @@ import os
 import csv
 import json
 import smtplib
+import random
+import time
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, send_from_directory, request, jsonify, Response, abort, session, redirect
 from flask_cors import CORS
+
+otp_store = {}
+
 
 app = Flask(__name__, template_folder='public/templates', static_folder='public/assets')
 CORS(app, supports_credentials=True) # Allow cross-origin requests from Firebase
@@ -147,6 +152,74 @@ def send_allocation_email(candidate_email, candidate_name, reg_id, exam, center)
     import threading
     threading.Thread(target=send_thread).start()
 
+def send_otp_email(candidate_email, otp):
+    smtp_user = os.environ.get('SMTP_USER')
+    smtp_pass = os.environ.get('SMTP_PASSWORD')
+    smtp_host = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
+    try:
+        port = int(os.environ.get('SMTP_PORT', '587'))
+    except:
+        port = 587
+
+    email_body = f"""
+    <html>
+      <head>
+        <style>
+          body {{ font-family: 'Segoe UI', Arial, sans-serif; background-color: #f1f5f9; color: #1e293b; margin: 0; padding: 20px; }}
+          .card {{ background-color: #ffffff; max-width: 600px; margin: 0 auto; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); overflow: hidden; border: 1px solid #e2e8f0; }}
+          .header {{ background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 24px; text-align: center; }}
+          .content {{ padding: 24px; line-height: 1.6; }}
+          .detail-box {{ background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0; text-align: center; font-size: 24px; letter-spacing: 4px; }}
+          .footer {{ text-align: center; font-size: 0.8rem; color: #64748b; padding: 16px; border-top: 1px solid #e2e8f0; }}
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="header">
+            <h2>SURYA EDUCATION BOARD</h2>
+            <p>Email Verification</p>
+          </div>
+          <div class="content">
+            <p>Dear Candidate,</p>
+            <p>Your One Time Password (OTP) for registration is:</p>
+            <div class="detail-box">
+              <strong>{otp}</strong>
+            </div>
+            <p>This OTP is valid for 10 minutes. Do not share it with anyone.</p>
+          </div>
+          <div class="footer">
+            <p>© 2026 SURYA Education Board. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+    """
+
+    if not smtp_user or not smtp_pass:
+        print("[SMTP LOG] No SMTP credentials configured. Printing OTP to console:", flush=True)
+        print(f"[SMTP LOG] To: {candidate_email}, OTP: {otp}", flush=True)
+        return
+
+    def send_thread():
+        try:
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = f"SURYA Registration OTP: {otp}"
+            msg['From'] = f"SURYA Education Board <{smtp_user}>"
+            msg['To'] = candidate_email
+            msg.attach(MIMEText(email_body, 'html'))
+
+            server = smtplib.SMTP(smtp_host, port)
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, candidate_email, msg.as_string())
+            server.quit()
+            print(f"[SMTP LOG] OTP email sent to {candidate_email}", flush=True)
+        except Exception as e:
+            print(f"[SMTP LOG] Error sending OTP email: {e}", flush=True)
+
+    import threading
+    threading.Thread(target=send_thread).start()
+
 # Explicitly serve static assets and uploads
 @app.route('/assets/<path:path>')
 def send_assets(path):
@@ -162,6 +235,50 @@ def home():
     return jsonify({"status": "Surya Backend API is running. Please access the frontend via Firebase."})
 
 # API routes
+@app.route('/api/send-otp', methods=['POST'])
+def send_otp():
+    contact = request.form.get('contact', '').strip()
+    contact_type = request.form.get('type', '').strip()
+    
+    if not contact or not contact_type:
+        return jsonify({"status": "error", "message": "Contact and type are required"}), 400
+        
+    otp = str(random.randint(100000, 999999))
+    otp_store[contact] = {
+        "otp": otp,
+        "expires": time.time() + 600 # 10 minutes validity
+    }
+    
+    if contact_type == 'Email':
+        send_otp_email(contact, otp)
+    elif contact_type == 'Mobile':
+        # TODO: Implement SMS provider (e.g. Twilio) here
+        print(f"[SMS LOG] To: {contact}, OTP: {otp}", flush=True)
+        
+    return jsonify({"status": "ok", "message": f"OTP sent to {contact}"})
+
+@app.route('/api/verify-otp', methods=['POST'])
+def verify_otp():
+    contact = request.form.get('contact', '').strip()
+    otp = request.form.get('otp', '').strip()
+    
+    if not contact or not otp:
+        return jsonify({"status": "error", "message": "Contact and OTP are required"}), 400
+        
+    record = otp_store.get(contact)
+    if not record:
+        return jsonify({"status": "error", "message": "No OTP requested for this contact"}), 400
+        
+    if time.time() > record["expires"]:
+        del otp_store[contact]
+        return jsonify({"status": "error", "message": "OTP has expired"}), 400
+        
+    if record["otp"] == otp:
+        del otp_store[contact]
+        return jsonify({"status": "ok", "message": "Verification successful"})
+    else:
+        return jsonify({"status": "error", "message": "Invalid OTP"}), 400
+
 @app.route('/api/seoas-register', methods=['POST'])
 def seoas_register():
     import time

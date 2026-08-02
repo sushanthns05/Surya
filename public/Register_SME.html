@@ -197,11 +197,8 @@
       </div>
       <div class="glass-notice-panel">
         <h3>Important Dates</h3>
-        <ul>
-          <li><strong>Registration Open:</strong> Today</li>
-          <li><strong>Last Date:</strong> 30th Next Month</li>
-          <li><strong>Correction Window:</strong> +15 Days</li>
-          <li><strong>Admit Card:</strong> -10 Days before exam</li>
+        <ul id="important-dates-list">
+          <li>Loading dates...</li>
         </ul>
       </div>
     </div>
@@ -235,7 +232,11 @@
             <label>Mobile Number</label>
             <div class="input-with-btn">
               <input type="tel" id="reg-mobile" required>
-              <button type="button" class="btn-sm btn-outline" onclick="mockVerify('Mobile')">Verify</button>
+              <button type="button" class="btn-sm btn-outline" id="btn-mobile" onclick="requestOtp('Mobile')">Verify</button>
+            </div>
+            <div class="input-with-btn mt-2" id="mobile-otp-group" style="display: none;">
+              <input type="text" id="reg-mobile-otp" placeholder="Enter OTP">
+              <button type="button" class="btn-sm btn-outline" onclick="confirmOtp('Mobile')">Confirm</button>
             </div>
             <span class="verify-status" id="mobile-status"></span>
           </div>
@@ -243,7 +244,11 @@
             <label>Email ID</label>
             <div class="input-with-btn">
               <input type="email" id="reg-email" required>
-              <button type="button" class="btn-sm btn-outline" onclick="mockVerify('Email')">Verify</button>
+              <button type="button" class="btn-sm btn-outline" id="btn-email" onclick="requestOtp('Email')">Verify</button>
+            </div>
+            <div class="input-with-btn mt-2" id="email-otp-group" style="display: none;">
+              <input type="text" id="reg-email-otp" placeholder="Enter OTP">
+              <button type="button" class="btn-sm btn-outline" onclick="confirmOtp('Email')">Confirm</button>
             </div>
             <span class="verify-status" id="email-status"></span>
           </div>

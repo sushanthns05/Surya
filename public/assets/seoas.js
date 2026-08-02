@@ -17,6 +17,15 @@ function startRegistration() {
 
 // Navigation
 function nextStep() {
+  if (currentStep === 1) {
+    const mobileVerified = document.getElementById('reg-mobile').dataset.verified === 'true';
+    const emailVerified = document.getElementById('reg-email').dataset.verified === 'true';
+    if (!mobileVerified || !emailVerified) {
+      alert("Please verify both Mobile Number and Email ID before proceeding.");
+      return;
+    }
+  }
+
   // Add validation logic here later if needed
   if (currentStep < totalSteps) {
     currentStep++;
@@ -69,13 +78,78 @@ function updateUI() {
   }
 }
 
-// Mock OTP Verification
-function mockVerify(type) {
+// Real OTP Verification
+async function requestOtp(type) {
+  const inputEl = document.getElementById(`reg-${type.toLowerCase()}`);
   const statusEl = document.getElementById(`${type.toLowerCase()}-status`);
+  const contact = inputEl.value.trim();
+  
+  if (!contact) {
+    alert(`Please enter a valid ${type}`);
+    return;
+  }
+  
   statusEl.innerHTML = '<span style="color:var(--seoas-gold)">Sending OTP...</span>';
-  setTimeout(() => {
-    statusEl.innerHTML = '<span style="color:var(--seoas-emerald)">✅ Verified</span>';
-  }, 1500);
+  
+  try {
+    const formData = new FormData();
+    formData.append('contact', contact);
+    formData.append('type', type);
+    
+    const response = await fetch(`${SEOAS_API_BASE}/api/send-otp`, {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.json();
+    if (result.status === 'ok') {
+      statusEl.innerHTML = '<span style="color:var(--seoas-emerald)">OTP Sent!</span>';
+      document.getElementById(`${type.toLowerCase()}-otp-group`).style.display = 'flex';
+      document.getElementById(`btn-${type.toLowerCase()}`).disabled = true;
+    } else {
+      statusEl.innerHTML = `<span style="color:red">Error: ${result.message}</span>`;
+    }
+  } catch (error) {
+    statusEl.innerHTML = `<span style="color:red">Error sending OTP</span>`;
+  }
+}
+
+async function confirmOtp(type) {
+  const contact = document.getElementById(`reg-${type.toLowerCase()}`).value.trim();
+  const otp = document.getElementById(`reg-${type.toLowerCase()}-otp`).value.trim();
+  const statusEl = document.getElementById(`${type.toLowerCase()}-status`);
+  
+  if (!otp) {
+    alert('Please enter the OTP');
+    return;
+  }
+  
+  statusEl.innerHTML = '<span style="color:var(--seoas-gold)">Verifying...</span>';
+  
+  try {
+    const formData = new FormData();
+    formData.append('contact', contact);
+    formData.append('otp', otp);
+    
+    const response = await fetch(`${SEOAS_API_BASE}/api/verify-otp`, {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.json();
+    if (result.status === 'ok') {
+      statusEl.innerHTML = '<span style="color:var(--seoas-emerald)">✅ Verified</span>';
+      document.getElementById(`${type.toLowerCase()}-otp-group`).style.display = 'none';
+      document.getElementById(`btn-${type.toLowerCase()}`).style.display = 'none';
+      document.getElementById(`reg-${type.toLowerCase()}`).readOnly = true;
+      // Mark as verified
+      document.getElementById(`reg-${type.toLowerCase()}`).dataset.verified = 'true';
+    } else {
+      statusEl.innerHTML = `<span style="color:red">Error: ${result.message}</span>`;
+    }
+  } catch (error) {
+    statusEl.innerHTML = `<span style="color:red">Error verifying OTP</span>`;
+  }
 }
 
 // Mock Payment
