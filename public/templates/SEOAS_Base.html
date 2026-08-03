@@ -3,13 +3,13 @@
 {% block title %}{% block exam_title %}SEOAS - Registration Portal{% endblock %}{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="/assets/seoas.css">
+<link rel="stylesheet" href="/assets/seoas.css?v=6">
 <!-- Firebase SDK -->
 <script defer src="/__/firebase/10.8.1/firebase-app-compat.js"></script>
 <script defer src="/__/firebase/10.8.1/firebase-firestore-compat.js"></script>
 <script defer src="/__/firebase/10.8.1/firebase-storage-compat.js"></script>
 <script defer src="/__/firebase/init.js"></script>
-<script defer src="/assets/seoas.js"></script>
+  <script defer src="/assets/seoas.js?v=2"></script>
 <script defer src="/assets/smart_schedule.js"></script>
 {% endblock %}
 
@@ -94,11 +94,11 @@
             <span class="verify-status" id="email-status"></span>
           </div>
           <div class="form-group">
-            <label>Password</label>
+            <label for="reg-pass">Password</label>
             <input type="password" id="reg-pass" required>
           </div>
           <div class="form-group">
-            <label>Confirm Password</label>
+            <label for="reg-pass2">Confirm Password</label>
             <input type="password" id="reg-pass2" required>
           </div>
         </div>

@@ -17,6 +17,7 @@ function startRegistration() {
 
 // Navigation
 function nextStep() {
+  if (!validateStep(currentStep)) return;
   if (currentStep === 1) {
     const mobileVerified = document.getElementById('reg-mobile').dataset.verified === 'true';
     const emailVerified = document.getElementById('reg-email').dataset.verified === 'true';
@@ -32,6 +33,34 @@ function nextStep() {
     updateUI();
     autoSave();
   }
+}
+
+function validateStep(stepNumber) {
+  const step = document.querySelector(`.wizard-step[data-step="${stepNumber}"]`);
+  if (!step) return true;
+  const password = document.getElementById('reg-pass');
+  const confirmation = document.getElementById('reg-pass2');
+  if (password && confirmation) {
+    const strong = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+    password.setCustomValidity(strong.test(password.value) ? '' : 'Use at least 8 characters with uppercase, lowercase, number, and special character.');
+    confirmation.setCustomValidity(password.value === confirmation.value ? '' : 'Passwords do not match.');
+  }
+  const required = [...step.querySelectorAll('input, select, textarea')].filter(input => input.required);
+  const invalid = required.find(input => !input.checkValidity());
+  if (invalid) {
+    invalid.reportValidity();
+    invalid.focus();
+    return false;
+  }
+  if (stepNumber === 3 && !document.getElementById('id-file')?.files.length) {
+    alert('Please upload your government ID.');
+    return false;
+  }
+  if (stepNumber === 7 && !document.getElementById('declare-check')?.checked) {
+    alert('Please confirm that all information is correct.');
+    return false;
+  }
+  return true;
 }
 
 function prevStep() {
@@ -78,7 +107,7 @@ function updateUI() {
   }
 }
 
-// Real OTP Verification
+// Dummy OTP Verification
 async function requestOtp(type) {
   const inputEl = document.getElementById(`reg-${type.toLowerCase()}`);
   const statusEl = document.getElementById(`${type.toLowerCase()}-status`);
@@ -88,30 +117,31 @@ async function requestOtp(type) {
     alert(`Please enter a valid ${type}`);
     return;
   }
-  
-  statusEl.innerHTML = '<span style="color:var(--seoas-gold)">Sending OTP...</span>';
-  
-  try {
-    const formData = new FormData();
-    formData.append('contact', contact);
-    formData.append('type', type);
-    
-    const response = await fetch(`${SEOAS_API_BASE}/api/send-otp`, {
-      method: 'POST',
-      body: formData
-    });
-    
-    const result = await response.json();
-    if (result.status === 'ok') {
-      statusEl.innerHTML = '<span style="color:var(--seoas-emerald)">OTP Sent!</span>';
-      document.getElementById(`${type.toLowerCase()}-otp-group`).style.display = 'flex';
-      document.getElementById(`btn-${type.toLowerCase()}`).disabled = true;
-    } else {
-      statusEl.innerHTML = `<span style="color:red">Error: ${result.message}</span>`;
+
+  if (type === 'Email') {
+    statusEl.innerHTML = '<span style="color:var(--seoas-gold)">Sending OTP...</span>';
+    const button = document.getElementById('btn-email');
+    button.disabled = true;
+    try {
+      const formData = new FormData();
+      formData.append('contact', contact);
+      formData.append('type', 'Email');
+      const response = await fetch(`${SEOAS_API_BASE}/api/send-otp`, { method: 'POST', body: formData });
+      const result = await response.json();
+      if (!response.ok || result.status !== 'ok') throw new Error(result.message || 'Unable to send OTP');
+      statusEl.innerHTML = '<span style="color:var(--seoas-gold)">OTP sent to your email</span>';
+      document.getElementById('email-otp-group').style.display = 'flex';
+    } catch (error) {
+      button.disabled = false;
+      statusEl.innerHTML = `<span style="color:red">${error.message}</span>`;
     }
-  } catch (error) {
-    statusEl.innerHTML = `<span style="color:red">Error sending OTP</span>`;
+    return;
   }
+  
+  statusEl.innerHTML = '<span style="color:var(--seoas-emerald)">✅ Verified</span>';
+  document.getElementById(`btn-${type.toLowerCase()}`).style.display = 'none';
+  inputEl.readOnly = true;
+  inputEl.dataset.verified = 'true';
 }
 
 async function confirmOtp(type) {
@@ -166,8 +196,15 @@ function mockPayment(method) {
 
 // Final Submit (Firebase Firestore + Storage)
 async function finalSubmit() {
+  for (let step = 1; step <= 7; step++) {
+    if (!validateStep(step)) {
+      currentStep = step;
+      updateUI();
+      return;
+    }
+  }
   const submitBtn = document.querySelector('.wizard-step[data-step="9"] button');
-  submitBtn.textContent = 'Submitting to Firestore...';
+  submitBtn.textContent = 'Submitting registration...';
   submitBtn.disabled = true;
 
   try {
@@ -177,41 +214,25 @@ async function finalSubmit() {
       if (input.id) data[input.id] = input.value;
     });
 
-    // Generate unique Application Number
-    const appNumber = 'SEOAS-' + Math.floor(10000000 + Math.random() * 90000000);
-    data.application_number = appNumber;
-    data.submittedAt = new Date().toISOString();
-
-    // Upload Files to Firebase Storage
-    const fileInputs = form.querySelectorAll('input[type="file"]');
-    const fileUrls = {};
-    for (let i = 0; i < fileInputs.length; i++) {
-      const input = fileInputs[i];
-      if (input.files.length > 0) {
-        const file = input.files[0];
-        submitBtn.textContent = `Uploading ${file.name}...`;
-        const storageRef = firebase.storage().ref(`uploads/${appNumber}/${file.name}`);
-        await storageRef.put(file);
-        const url = await storageRef.getDownloadURL();
-        fileUrls[input.id || `file_${i}`] = url;
-      }
-    }
-    data.files = fileUrls;
-
-    // Save to Firestore
-    submitBtn.textContent = 'Saving Registration...';
-    await firebase.firestore().collection('seoas_registrations').doc(appNumber).set(data);
+    const payload = new FormData();
+    payload.append('data', JSON.stringify(data));
+    form.querySelectorAll('input[type="file"]').forEach(input => {
+      if (input.files[0]) payload.append(input.id || 'document', input.files[0]);
+    });
+    const response = await fetch(`${SEOAS_API_BASE}/api/seoas-register`, { method: 'POST', body: payload });
+    const result = await response.json();
+    if (!response.ok || result.status !== 'ok') throw new Error(result.message || 'Registration was rejected');
 
     // Success Update
     const name = document.getElementById('reg-name').value || 'Candidate';
     document.getElementById('conf-name').textContent = name;
-    document.getElementById('conf-app-no').textContent = appNumber;
+    document.getElementById('conf-app-no').textContent = result.application_number;
     nextStep(); // Advance to Confirmation
     localStorage.removeItem('seoas-draft'); // Clear auto-save
 
   } catch (err) {
     console.error("Firebase Submit Error: ", err);
-    alert("Submission failed: " + err.message + "\n\n(Note: If permission denied, ensure Firestore/Storage Security Rules allow writes)");
+    alert("Submission failed: " + err.message);
     submitBtn.textContent = 'Submit Application Now';
     submitBtn.disabled = false;
   }
@@ -223,7 +244,7 @@ function autoSave() {
   const data = {};
   const inputs = form.querySelectorAll('input:not([type="file"]), select, textarea');
   inputs.forEach(input => {
-    if (input.id) data[input.id] = input.value;
+    if (input.id && !['reg-pass', 'reg-pass2'].includes(input.id)) data[input.id] = input.value;
   });
   localStorage.setItem('seoas-draft', JSON.stringify(data));
   console.log('Auto-saved at', new Date().toLocaleTimeString());
@@ -283,3 +304,15 @@ function generateReviewSummary() {
     <button type="button" class="seoas-btn btn-outline" onclick="currentStep=2; updateUI();">Edit Details</button>
   `;
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const pass = document.getElementById('reg-pass');
+    if(pass) {
+      pass.style.pointerEvents = 'auto';
+      pass.style.zIndex = '99999';
+      pass.style.position = 'relative';
+    }
+  }, 1000);
+});

@@ -43,6 +43,7 @@
   filter: blur(80px);
   z-index: 0;
   opacity: 0.5;
+  pointer-events: none;
 }
 .seoas-portal::before {
   top: -10%; left: -10%;
@@ -156,6 +157,22 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
+.seoas-wizard-container { overflow: visible; }
+.section-title {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.form-group small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--seoas-text-light);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+.form-group {
+  position: relative;
+  z-index: 1;
+}
 .form-group label {
   display: block;
   font-weight: 600;
@@ -171,10 +188,26 @@
   color: var(--seoas-text);
   font-family: inherit;
   transition: border-color 0.3s ease;
+  position: relative;
+  z-index: 50;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  pointer-events: auto;
 }
 .form-group input:focus, .form-group select:focus {
   outline: none;
   border-color: var(--seoas-blue-light);
+}
+.form-group select {
+  color-scheme: dark;
+}
+.form-group select option {
+  color: #f8fafc;
+  background: #1e293b;
+}
+.seoas-wizard-container {
+  min-height: calc(100vh - 180px);
+  padding-bottom: 4rem;
 }
 
 /* Progress Bar */
@@ -217,3 +250,19 @@
 }
 .hidden-input { display: none; }
 .image-preview { max-width: 100%; height: auto; border-radius: 8px; display: none; margin-top: 1rem; }
+
+#reg-pass, #reg-pass2 {
+  position: relative !important;
+  z-index: 2 !important;
+  pointer-events: auto !important;
+  cursor: text !important;
+}
+
+.masked-password { -webkit-text-security: disc; }
+
+@media (max-width: 700px) {
+  .glass-card { padding: 1.25rem; }
+  .form-grid { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .form-group[style*="grid-column"] { grid-column: 1 / -1 !important; }
+  .wizard-step h2 { font-size: 1.35rem; }
+}
