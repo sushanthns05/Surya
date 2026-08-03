@@ -233,8 +233,8 @@ def send_otp_email(candidate_email, otp):
 
 def send_gmail_otp(candidate_email, otp):
     """Send an OTP through Gmail SMTP and report whether Gmail accepted it."""
-    smtp_user = os.environ.get('SMTP_USER', '').strip()
-    smtp_pass = os.environ.get('SMTP_PASSWORD', '').replace(' ', '').strip()
+    smtp_user = (os.environ.get('GMAIL_USER') or os.environ.get('SMTP_USER') or '').strip()
+    smtp_pass = (os.environ.get('GMAIL_APP_PASSWORD') or os.environ.get('SMTP_PASSWORD') or '').replace(' ', '').strip()
     smtp_host = os.environ.get('SMTP_HOST', 'smtp.gmail.com').strip()
     try:
         port = int(os.environ.get('SMTP_PORT', '587'))
@@ -255,20 +255,39 @@ def send_gmail_otp(candidate_email, otp):
         'html'
     ))
 
-    try:
-        if port == 465:
-            server = smtplib.SMTP_SSL(smtp_host, port, timeout=20)
-        else:
-            server = smtplib.SMTP(smtp_host, port, timeout=20)
-            server.starttls()
-        server.login(smtp_user, smtp_pass)
-        server.sendmail(smtp_user, [candidate_email], message.as_string())
-        server.quit()
-        print(f'[SMTP LOG] Gmail OTP accepted for {candidate_email}', flush=True)
-        return True, ''
-    except Exception as exc:
-        print(f'[SMTP LOG] Gmail OTP failed for {candidate_email}: {exc}', flush=True)
-        return False, 'Gmail could not send the OTP. Check the server Gmail App Password.'
+    ports = [port] if port == 465 else [port, 465]
+    last_error = None
+    for attempt_port in ports:
+        server = None
+        try:
+            if attempt_port == 465:
+                server = smtplib.SMTP_SSL(smtp_host, attempt_port, timeout=10)
+            else:
+                server = smtplib.SMTP(smtp_host, attempt_port, timeout=10)
+                server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, [candidate_email], message.as_string())
+            server.quit()
+            print(f'[SMTP LOG] Gmail OTP accepted for {candidate_email}', flush=True)
+            return True, ''
+        except smtplib.SMTPAuthenticationError as exc:
+            last_error = exc
+            if server:
+                server.quit()
+            return False, 'Gmail rejected the login. Generate a new Gmail App Password and update the Render variable.'
+        except (smtplib.SMTPConnectError, TimeoutError, OSError) as exc:
+            last_error = exc
+            if server:
+                server.close()
+            continue
+        except Exception as exc:
+            last_error = exc
+            if server:
+                server.close()
+            break
+
+    print(f'[SMTP LOG] Gmail OTP failed for {candidate_email}: {last_error}', flush=True)
+    return False, 'Render could not connect to Gmail SMTP on ports 587 or 465. Check SMTP connectivity or use a transactional email provider.'
 
 def send_registration_email(candidate_email, candidate_name, application_number):
     """Send the candidate a confirmation without ever including the password."""
