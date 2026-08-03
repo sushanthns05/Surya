@@ -8,6 +8,10 @@ import re
 import hashlib
 import html
 import threading
+import base64
+import urllib.parse
+import urllib.request
+import urllib.error
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -241,9 +245,6 @@ def send_gmail_otp(candidate_email, otp):
     except ValueError:
         port = 587
 
-    if not smtp_user or not smtp_pass:
-        return False, 'Gmail SMTP credentials are not configured on the server'
-
     message = MIMEMultipart('alternative')
     message['Subject'] = 'SURYA Registration Email Verification OTP'
     message['From'] = f'SURYA Education Board <{smtp_user}>'
@@ -254,6 +255,39 @@ def send_gmail_otp(candidate_email, otp):
         '<p>This OTP expires in 10 minutes. Do not share it with anyone.</p>',
         'html'
     ))
+
+    gmail_client_id = os.environ.get('GMAIL_CLIENT_ID', '').strip()
+    gmail_client_secret = os.environ.get('GMAIL_CLIENT_SECRET', '').strip()
+    gmail_refresh_token = os.environ.get('GMAIL_REFRESH_TOKEN', '').strip()
+    if gmail_client_id and gmail_client_secret and gmail_refresh_token:
+        try:
+            token_payload = urllib.parse.urlencode({
+                'client_id': gmail_client_id,
+                'client_secret': gmail_client_secret,
+                'refresh_token': gmail_refresh_token,
+                'grant_type': 'refresh_token',
+            }).encode()
+            token_request = urllib.request.Request(
+                'https://oauth2.googleapis.com/token', data=token_payload,
+                headers={'Content-Type': 'application/x-www-form-urlencoded'}, method='POST')
+            with urllib.request.urlopen(token_request, timeout=10) as response:
+                access_token = json.loads(response.read().decode())['access_token']
+            raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode().rstrip('=')
+            gmail_request = urllib.request.Request(
+                'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
+                data=json.dumps({'raw': raw_message}).encode(),
+                headers={'Authorization': f'Bearer {access_token}', 'Content-Type': 'application/json'},
+                method='POST')
+            with urllib.request.urlopen(gmail_request, timeout=10):
+                pass
+            print(f'[GMAIL API] OTP accepted for {candidate_email}', flush=True)
+            return True, ''
+        except (urllib.error.HTTPError, urllib.error.URLError, KeyError, json.JSONDecodeError) as exc:
+            print(f'[GMAIL API] OTP failed for {candidate_email}: {exc}', flush=True)
+            return False, 'Gmail API rejected the request. Check the OAuth client and refresh token in Render.'
+
+    if not smtp_user or not smtp_pass:
+        return False, 'Configure Gmail OAuth credentials for HTTPS delivery or SMTP credentials on the server.'
 
     ports = [port] if port == 465 else [port, 465]
     last_error = None
