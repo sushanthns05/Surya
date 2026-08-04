@@ -648,7 +648,7 @@ def seoas_register():
         return jsonify({"status": "error", "message": "Government ID must contain 12 digits"}), 400
     if not re.fullmatch(r'\d{6}', value('pd-pin')):
         return jsonify({"status": "error", "message": "PIN code must contain 6 digits"}), 400
-    academic_values = {key: value(raw) for key, raw in data.items() if str(key).startswith('academic') and value(raw)}
+    academic_values = {key: value(key) for key in data.keys() if str(key).startswith('academic') and value(key)}
     if not academic_values:
         return jsonify({"status": "error", "message": "Please complete the academic details"}), 400
     if value('academic-year'):

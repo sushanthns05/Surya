@@ -28,7 +28,7 @@ function nextStep() {
   }
 
   // Add validation logic here later if needed
-  if (currentStep < totalSteps) {
+  if (currentStep < 9) { // Prevent nextStep from bypassing step 9
     currentStep++;
     updateUI();
     autoSave();
@@ -188,6 +188,7 @@ async function confirmOtp(type) {
 
 // Mock Payment
 function mockPayment(method) {
+  document.querySelectorAll('.payment-options button').forEach(btn => btn.disabled = true);
   const statusEl = document.getElementById('payment-status');
   statusEl.innerHTML = `<span style="color:var(--seoas-gold)">Processing ${method} Payment...</span>`;
   setTimeout(() => {
