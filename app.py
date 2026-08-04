@@ -323,8 +323,8 @@ def send_gmail_otp(candidate_email, otp):
     print(f'[SMTP LOG] Gmail OTP failed for {candidate_email}: {last_error}', flush=True)
     return False, 'Render could not connect to Gmail SMTP on ports 587 or 465. Check SMTP connectivity or use a transactional email provider.'
 
-def send_registration_email(candidate_email, candidate_name, application_number):
-    """Send the candidate a confirmation without ever including the password."""
+def send_registration_email(candidate_email, candidate_name, application_number, registration_data, password):
+    """Send the candidate a confirmation containing their login details."""
     smtp_user = os.environ.get('SMTP_USER')
     smtp_pass = os.environ.get('SMTP_PASSWORD')
     smtp_host = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
@@ -334,13 +334,25 @@ def send_registration_email(candidate_email, candidate_name, application_number)
         port = 587
 
     safe_name = html.escape(candidate_name)
+    detail_rows = []
+    for key, raw_value in registration_data.items():
+        if key == 'password_hash' or key.startswith('file_') or raw_value in ('', None):
+            continue
+        label = html.escape(str(key).replace('-', ' ').replace('_', ' ').title())
+        detail = html.escape(str(raw_value))
+        detail_rows.append(f'<tr><td style="padding:6px;font-weight:bold">{label}</td><td style="padding:6px">{detail}</td></tr>')
+    detail_table = ''.join(detail_rows)
     email_body = f"""
     <html><body style="font-family:Arial,sans-serif;color:#1e293b">
       <h2 style="color:#1e3a8a">SURYA Registration Successful</h2>
       <p>Dear <strong>{safe_name}</strong>,</p>
       <p>Your registration has been completed successfully.</p>
-      <p><strong>Application number:</strong> {application_number}</p>
-      <p>Please keep this application number for future communication. Your password is not included in this email.</p>
+      <table border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-color:#cbd5e1">
+        <tr><td style="padding:6px;font-weight:bold">Application Number</td><td style="padding:6px">{html.escape(application_number)}</td></tr>
+        <tr><td style="padding:6px;font-weight:bold">Password</td><td style="padding:6px">{html.escape(password)}</td></tr>
+        {detail_table}
+      </table>
+      <p>Keep this email private. Use your application number and password for future login.</p>
       <p>Regards,<br>SURYA Education Board</p>
     </body></html>
     """
@@ -524,6 +536,17 @@ def seoas_register():
     except ValueError:
         return jsonify({"status": "error", "message": "Enter a valid passing year and marks between 0 and 100"}), 400
 
+    allowed_centers = {
+        'Bengaluru', 'Mysuru', 'Mangaluru', 'Hubballi-Dharwad', 'Kalaburagi',
+        'Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem',
+        'Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Aurangabad (Chhatrapati Sambhajinagar)',
+        'Hyderabad', 'Warangal', 'Karimnagar', 'Nizamabad', 'Khammam',
+        'Visakhapatnam', 'Vijayawada', 'Tirupati', 'Guntur', 'Kurnool',
+        'Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Kannur'
+    }
+    if value('preference-1') not in allowed_centers or value('preference-2') not in allowed_centers:
+        return jsonify({"status": "error", "message": "Select exam cities from the approved test centers list"}), 400
+
     with registration_lock:
         duplicate = registration_duplicate(data)
     if duplicate:
@@ -578,7 +601,7 @@ def seoas_register():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
         
-    send_registration_email(value('reg-email'), value('reg-name'), app_no)
+    send_registration_email(value('reg-email'), value('reg-name'), app_no, data, password)
     return jsonify({"status": "ok", "application_number": app_no, "message": "Application submitted successfully. A confirmation email has been sent."})
 
 @app.route('/register', methods=['POST'])
