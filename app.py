@@ -324,10 +324,10 @@ def send_gmail_otp(candidate_email, otp):
     print(f'[SMTP LOG] Gmail OTP failed for {candidate_email}: {last_error}', flush=True)
     return False, 'Render could not connect to Gmail SMTP on ports 587 or 465. Check SMTP connectivity or use a transactional email provider.'
 
-def send_registration_email(candidate_email, candidate_name, application_number, registration_data, password):
+def send_registration_email(candidate_email, candidate_name, application_number, registration_data, password, pdf_url):
     """Send the candidate a confirmation containing their login details."""
-    smtp_user = os.environ.get('SMTP_USER')
-    smtp_pass = os.environ.get('SMTP_PASSWORD')
+    smtp_user = (os.environ.get('GMAIL_USER') or os.environ.get('SMTP_USER') or '').strip()
+    smtp_pass = (os.environ.get('GMAIL_APP_PASSWORD') or os.environ.get('SMTP_PASSWORD') or '').replace(' ', '').strip()
     smtp_host = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
     try:
         port = int(os.environ.get('SMTP_PORT', '587'))
@@ -343,23 +343,63 @@ def send_registration_email(candidate_email, candidate_name, application_number,
         detail = html.escape(str(raw_value))
         detail_rows.append(f'<tr><td style="padding:6px;font-weight:bold">{label}</td><td style="padding:6px">{detail}</td></tr>')
     detail_table = ''.join(detail_rows)
+    public_base_url = os.environ.get('PUBLIC_API_BASE_URL', 'https://surya-s2f5.onrender.com').rstrip('/')
+    safe_pdf_url = html.escape(public_base_url + pdf_url)
+    logo_url = html.escape(public_base_url + '/assets/favicon.svg')
+    logo = f'<img src="{logo_url}" width="42" height="42" alt="SURYA logo" style="display:inline-block;border-radius:12px">'
     email_body = f"""
-    <html><body style="font-family:Arial,sans-serif;color:#1e293b">
-      <h2 style="color:#1e3a8a">SURYA Registration Successful</h2>
-      <p>Dear <strong>{safe_name}</strong>,</p>
-      <p>Your registration has been completed successfully.</p>
-      <table border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-color:#cbd5e1">
-        <tr><td style="padding:6px;font-weight:bold">Application Number</td><td style="padding:6px">{html.escape(application_number)}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold">Password</td><td style="padding:6px">{html.escape(password)}</td></tr>
-        {detail_table}
-      </table>
-      <p>Keep this email private. Use your application number and password for future login.</p>
-      <p>Regards,<br>SURYA Education Board</p>
+    <html><body style="margin:0;background:#f1f5f9;font-family:Arial,sans-serif;color:#1e293b;padding:24px">
+      <div style="max-width:680px;margin:auto;background:#fff;border:1px solid #dbe3ef;border-radius:16px;overflow:hidden">
+        <div style="background:linear-gradient(135deg,#172554,#2563eb);color:#fff;padding:24px;text-align:center">
+          {logo}<h1 style="margin:10px 0 4px;font-size:22px">SURYA EDUCATION BOARD</h1>
+          <p style="margin:0;color:#dbeafe">Registration Confirmation</p>
+        </div>
+        <div style="padding:26px">
+          <p>Dear <strong>{safe_name}</strong>,</p>
+          <p>Your registration has been completed successfully. Keep this email for your records.</p>
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:16px;margin:20px 0">
+            <p style="margin:0 0 8px"><strong>Application Number:</strong> {html.escape(application_number)}</p>
+            <p style="margin:0"><strong>Password:</strong> {html.escape(password)}</p>
+          </div>
+          <h3 style="color:#1e3a8a;margin-bottom:8px">Submitted Details</h3>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:1px solid #cbd5e1">
+            {detail_table}
+          </table>
+          <p style="text-align:center;margin:24px 0">
+            <a href="{safe_pdf_url}" style="display:inline-block;background:#2563eb;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:bold">Download Application PDF</a>
+          </p>
+          <p style="font-size:12px;color:#64748b">Keep your application number and password private.</p>
+        </div>
+        <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px;text-align:center;color:#64748b;font-size:12px">© 2026 SURYA Education Board</div>
+      </div>
     </body></html>
     """
 
+    gmail_client_id = os.environ.get('GMAIL_CLIENT_ID', '').strip()
+    gmail_client_secret = os.environ.get('GMAIL_CLIENT_SECRET', '').strip()
+    gmail_refresh_token = os.environ.get('GMAIL_REFRESH_TOKEN', '').strip()
+    if gmail_client_id and gmail_client_secret and gmail_refresh_token:
+        try:
+            token_payload = urllib.parse.urlencode({'client_id': gmail_client_id, 'client_secret': gmail_client_secret, 'refresh_token': gmail_refresh_token, 'grant_type': 'refresh_token'}).encode()
+            token_request = urllib.request.Request('https://oauth2.googleapis.com/token', data=token_payload, headers={'Content-Type': 'application/x-www-form-urlencoded'}, method='POST')
+            with urllib.request.urlopen(token_request, timeout=10) as response:
+                access_token = json.loads(response.read().decode())['access_token']
+            email_message = MIMEMultipart('alternative')
+            email_message['Subject'] = f"SURYA Registration Confirmation - {application_number}"
+            email_message['From'] = f"SURYA Education Board <{smtp_user}>"
+            email_message['To'] = candidate_email
+            email_message.attach(MIMEText(email_body, 'html'))
+            raw_message = base64.urlsafe_b64encode(email_message.as_bytes()).decode().rstrip('=')
+            gmail_request = urllib.request.Request('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', data=json.dumps({'raw': raw_message}).encode(), headers={'Authorization': f'Bearer {access_token}', 'Content-Type': 'application/json'}, method='POST')
+            with urllib.request.urlopen(gmail_request, timeout=10):
+                pass
+            print(f"[GMAIL API] Registration email sent to {candidate_email}", flush=True)
+            return
+        except Exception as exc:
+            print(f"[GMAIL API] Registration email failed for {candidate_email}: {exc}", flush=True)
+
     if not smtp_user or not smtp_pass:
-        print(f"[SMTP LOG] Registration email not sent: SMTP credentials are missing (recipient: {candidate_email})", flush=True)
+        print(f"[EMAIL LOG] Registration email not sent: Gmail API or SMTP credentials are missing (recipient: {candidate_email})", flush=True)
         return
 
     def send_thread():
@@ -652,7 +692,7 @@ def seoas_register():
         print(f'[PDF] Failed to create application PDF for {app_no}: {exc}', flush=True)
         return jsonify({"status": "error", "message": "Application saved, but the PDF could not be generated. Please contact support."}), 500
 
-    send_registration_email(value('reg-email'), value('reg-name'), app_no, data, password)
+    send_registration_email(value('reg-email'), value('reg-name'), app_no, data, password, pdf_url)
     public_details = {key: value for key, value in data.items() if key != 'password_hash'}
     return jsonify({"status": "ok", "application_number": app_no, "pdf_url": pdf_url, "details": public_details, "password": password, "message": "Application submitted successfully. A confirmation email has been sent."})
 
