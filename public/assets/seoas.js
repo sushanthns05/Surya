@@ -171,9 +171,13 @@ async function confirmOtp(type) {
       statusEl.innerHTML = '<span style="color:var(--seoas-emerald)">✅ Verified</span>';
       document.getElementById(`${type.toLowerCase()}-otp-group`).style.display = 'none';
       document.getElementById(`btn-${type.toLowerCase()}`).style.display = 'none';
-      document.getElementById(`reg-${type.toLowerCase()}`).readOnly = true;
+      const verifiedInput = document.getElementById(`reg-${type.toLowerCase()}`);
+      verifiedInput.readOnly = true;
       // Mark as verified
-      document.getElementById(`reg-${type.toLowerCase()}`).dataset.verified = 'true';
+      verifiedInput.dataset.verified = 'true';
+      if (type === 'Email' && result.verification_token) {
+        verifiedInput.dataset.verificationToken = result.verification_token;
+      }
     } else {
       statusEl.innerHTML = `<span style="color:red">Error: ${result.message}</span>`;
     }
@@ -212,6 +216,10 @@ async function finalSubmit() {
 
     const payload = new FormData();
     payload.append('data', JSON.stringify(data));
+    const emailInput = document.getElementById('reg-email');
+    if (emailInput?.dataset.verificationToken) {
+      payload.append('email_verification_token', emailInput.dataset.verificationToken);
+    }
     form.querySelectorAll('input[type="file"]').forEach(input => {
       if (input.files[0]) payload.append(input.id || 'document', input.files[0]);
     });
@@ -388,6 +396,15 @@ function renderConfirmation(data, result) {
     details.parentElement.appendChild(download);
   }
   download.href = new URL(result.pdf_url, SEOAS_API_BASE || window.location.origin).href;
+
+  const emailNotice = document.getElementById('conf-email-status') || document.createElement('p');
+  emailNotice.id = 'conf-email-status';
+  emailNotice.style.marginTop = '12px';
+  emailNotice.style.color = result.email_sent ? 'var(--seoas-emerald)' : '#fbbf24';
+  emailNotice.textContent = result.email_sent
+    ? 'Confirmation email sent to your verified email address.'
+    : 'Registration saved, but the confirmation email could not be sent. Please download the PDF and contact support.';
+  if (!emailNotice.parentElement) details.parentElement.appendChild(emailNotice);
 }
 
 function generateReviewSummary() {

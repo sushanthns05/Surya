@@ -6,6 +6,7 @@ import random
 import time
 import re
 import hashlib
+import hmac
 import html
 import threading
 import base64
@@ -23,6 +24,34 @@ from openpyxl import Workbook, load_workbook
 
 otp_store = {}
 registration_lock = threading.Lock()
+
+
+def _verification_secret():
+    return (os.environ.get('VERIFICATION_SECRET') or app.secret_key).encode('utf-8')
+
+
+def create_email_verification_token(email):
+    """Create a short-lived, server-verifiable email verification token."""
+    payload = json.dumps({
+        'email': email.strip().lower(),
+        'expires': int(time.time()) + 1800,
+    }, separators=(',', ':')).encode('utf-8')
+    encoded = base64.urlsafe_b64encode(payload).decode().rstrip('=')
+    signature = hmac.new(_verification_secret(), encoded.encode('ascii'), hashlib.sha256).hexdigest()
+    return f'{encoded}.{signature}'
+
+
+def verify_email_verification_token(email, token):
+    try:
+        encoded, signature = token.split('.', 1)
+        expected = hmac.new(_verification_secret(), encoded.encode('ascii'), hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(signature, expected):
+            return False
+        padding = '=' * (-len(encoded) % 4)
+        payload = json.loads(base64.urlsafe_b64decode((encoded + padding).encode('ascii')))
+        return payload.get('email') == email.strip().lower() and int(payload.get('expires', 0)) >= int(time.time())
+    except (ValueError, TypeError, KeyError, json.JSONDecodeError, UnicodeError):
+        return False
 
 
 app = Flask(__name__, template_folder='public/templates', static_folder='public/assets')
@@ -394,35 +423,34 @@ def send_registration_email(candidate_email, candidate_name, application_number,
             with urllib.request.urlopen(gmail_request, timeout=10):
                 pass
             print(f"[GMAIL API] Registration email sent to {candidate_email}", flush=True)
-            return
+            return True, ''
         except Exception as exc:
             print(f"[GMAIL API] Registration email failed for {candidate_email}: {exc}", flush=True)
 
     if not smtp_user or not smtp_pass:
         print(f"[EMAIL LOG] Registration email not sent: Gmail API or SMTP credentials are missing (recipient: {candidate_email})", flush=True)
-        return
+        return False, 'Email service credentials are not configured'
 
-    def send_thread():
-        try:
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = f"SURYA Registration Confirmation - {application_number}"
-            msg['From'] = f"SURYA Education Board <{smtp_user}>"
-            msg['To'] = candidate_email
-            msg.attach(MIMEText(email_body, 'html'))
-            if port == 465:
-                server = smtplib.SMTP_SSL(smtp_host, port)
-                server.login(smtp_user, smtp_pass)
-            else:
-                server = smtplib.SMTP(smtp_host, port)
-                server.starttls()
-                server.login(smtp_user, smtp_pass)
-            server.sendmail(smtp_user, candidate_email, msg.as_string())
-            server.quit()
-            print(f"[SMTP LOG] Registration email sent to {candidate_email}", flush=True)
-        except Exception as exc:
-            print(f"[SMTP LOG] Registration email failed for {candidate_email}: {exc}", flush=True)
-
-    threading.Thread(target=send_thread, daemon=True).start()
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = f"SURYA Registration Confirmation - {application_number}"
+        msg['From'] = f"SURYA Education Board <{smtp_user}>"
+        msg['To'] = candidate_email
+        msg.attach(MIMEText(email_body, 'html'))
+        if port == 465:
+            server = smtplib.SMTP_SSL(smtp_host, port, timeout=15)
+            server.login(smtp_user, smtp_pass)
+        else:
+            server = smtplib.SMTP(smtp_host, port, timeout=15)
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+        server.sendmail(smtp_user, [candidate_email], msg.as_string())
+        server.quit()
+        print(f"[SMTP LOG] Registration email sent to {candidate_email}", flush=True)
+        return True, ''
+    except Exception as exc:
+        print(f"[SMTP LOG] Registration email failed for {candidate_email}: {exc}", flush=True)
+        return False, 'The confirmation email could not be sent. Please contact support.'
 
 def generate_application_pdf(application_number, registration_data, password, upload_dir):
     """Create the candidate's downloadable application summary PDF."""
@@ -532,7 +560,8 @@ def send_otp():
     otp = str(random.randint(100000, 999999))
     otp_store[contact] = {
         "otp": otp,
-        "expires": time.time() + 600 # 10 minutes validity
+        "expires": time.time() + 600, # 10 minutes validity
+        "type": contact_type,
     }
     
     if contact_type == 'Email':
@@ -564,7 +593,10 @@ def verify_otp():
         
     if record["otp"] == otp:
         del otp_store[contact]
-        return jsonify({"status": "ok", "message": "Verification successful"})
+        response = {"status": "ok", "message": "Verification successful"}
+        if record.get('type') == 'Email':
+            response['verification_token'] = create_email_verification_token(contact)
+        return jsonify(response)
     else:
         return jsonify({"status": "error", "message": "Invalid OTP"}), 400
 
@@ -582,6 +614,10 @@ def seoas_register():
 
     def value(key):
         return str(data.get(key, '')).strip()
+
+    email_token = request.form.get('email_verification_token', '').strip()
+    if not email_token or not verify_email_verification_token(value('reg-email'), email_token):
+        return jsonify({"status": "error", "message": "Please verify the registered email address before submitting"}), 400
 
     required = {
         'reg-name': 'Candidate name', 'reg-mobile': 'Mobile number',
@@ -701,9 +737,10 @@ def seoas_register():
         print(f'[PDF] Failed to create application PDF for {app_no}: {exc}', flush=True)
         return jsonify({"status": "error", "message": "Application saved, but the PDF could not be generated. Please contact support."}), 500
 
-    send_registration_email(value('reg-email'), value('reg-name'), app_no, data, password, pdf_url)
+    email_sent, email_error = send_registration_email(value('reg-email'), value('reg-name'), app_no, data, password, pdf_url)
     public_details = {key: value for key, value in data.items() if key != 'password_hash'}
-    return jsonify({"status": "ok", "application_number": app_no, "pdf_url": pdf_url, "details": public_details, "password": password, "message": "Application submitted successfully. A confirmation email has been sent."})
+    message = "Application submitted successfully. A confirmation email has been sent." if email_sent else "Application submitted successfully, but the confirmation email could not be sent. Please download the PDF below and contact support."
+    return jsonify({"status": "ok", "application_number": app_no, "pdf_url": pdf_url, "details": public_details, "password": password, "email_sent": email_sent, "email_error": email_error, "message": message})
 
 @app.route('/register', methods=['POST'])
 def handle_register():
