@@ -9,7 +9,7 @@ TEMPLATE_FILE = r"e:\Sushanth Projects\SURYA\templates\SET_Session01_Exam_Portal
 
 EXAMS = [
     {"name": "Vault_SET_Session01.html", "title": "Surya Entrance Test [SET] Session 01 Vault", "code": "SET 01", "header": "Surya Entrance Test (SET) 2027-27", "duration_seconds": 10800},
-    {"name": "Vault_SET_Session02.html", "title": "Surya Entrance Test [SET] Session 02 Vault", "code": "SET 02", "header": "Surya Entrance Test (SET) 2027-27", "duration_seconds": 7200},
+    {"name": "Vault_SET_Session02.html", "title": "Surya Entrance Test [SET] Session 02 Vault", "code": "SET 02", "header": "Surya Entrance Test (SET) 2027-27", "duration_seconds": 12600, "template": r"e:\Sushanth Projects\SURYA\templates\SET_Session02_Exam_Portal.html"},
     {"name": "Vault_SST.html", "title": "Surya Scholarship Test [SST] Vault", "code": "SST", "header": "Surya Scholarship Test (SST) 2027-27", "duration_seconds": 10800},
     {"name": "Vault_SAT.html", "title": "Surya Admission Test [SAT] Vault", "code": "SAT", "header": "Surya Admission Test (SAT) 2027-27", "duration_seconds": 10800},
     {"name": "Vault_SME.html", "title": "Surya Medical Examination [SME] Vault", "code": "SME", "header": "Surya Medical Examination (SME) 2027-27", "duration_seconds": 10800},
@@ -645,17 +645,22 @@ def generate():
             for row in reader:
                 all_candidates.append(row)
 
-    with open(TEMPLATE_FILE, "r", encoding="utf-8") as f:
-        tcs_html = f.read()
-
-    tcs_html = re.sub(r'<div class="screen active" id="loginScreen">', r'<div class="screen" id="loginScreen" style="display:none;">', tcs_html)
-    tcs_html = re.sub(r'<body[^>]*>', lambda m: m.group(0) + "\n" + CMS_HTML, tcs_html, count=1)
-    
-    tcs_html = tcs_html.replace("const EXAM_SECTIONS =", "window.EXAM_SECTIONS =")
-    tcs_html = tcs_html.replace("const QUESTIONS = buildQuestions();", "window.QUESTIONS = buildQuestions();")
-    tcs_html = tcs_html.replace("const state =", "window.state =")
-
     for exam in EXAMS:
+        template_file = exam.get("template", TEMPLATE_FILE)
+        if not os.path.exists(template_file):
+            print(f"Error: Template {template_file} not found.")
+            continue
+            
+        with open(template_file, "r", encoding="utf-8") as f:
+            tcs_html = f.read()
+
+        tcs_html = re.sub(r'<div class="screen active" id="loginScreen">', r'<div class="screen" id="loginScreen" style="display:none;">', tcs_html)
+        tcs_html = re.sub(r'<body[^>]*>', lambda m: m.group(0) + "\n" + CMS_HTML, tcs_html, count=1)
+        
+        tcs_html = tcs_html.replace("const EXAM_SECTIONS =", "window.EXAM_SECTIONS =")
+        tcs_html = tcs_html.replace("const QUESTIONS = buildQuestions();", "window.QUESTIONS = buildQuestions();")
+        tcs_html = tcs_html.replace("const state =", "window.state =")
+
         final_html = tcs_html
         final_html = re.sub(r'<title>.*?</title>', f"<title>{exam['title']}</title>", final_html)
         
@@ -669,7 +674,9 @@ def generate():
         # Filter candidates for this specific exam
         vault_candidates = {}
         for row in all_candidates:
-            if row.get("exam_category", "").strip().upper() == exam["code"].upper():
+            cand_cat = row.get("exam_category", "").strip().upper()
+            target_cat = exam["code"].upper()
+            if cand_cat == target_cat or (cand_cat in ["SET 01", "SET 02"] and target_cat in ["SET 01", "SET 02"]):
                 reg_id = row.get("registration_id", "").strip().upper()
                 if not reg_id: continue
                 

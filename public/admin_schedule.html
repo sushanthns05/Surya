@@ -217,6 +217,16 @@
         <input type="datetime-local" id="sch-reg-close" required>
       </div>
 
+      <div class="form-group">
+        <label>Admit Card Release Date & Time</label>
+        <input type="datetime-local" id="sch-admit">
+      </div>
+
+      <div class="form-group">
+        <label>Examination Date & Time</label>
+        <input type="datetime-local" id="sch-exam">
+      </div>
+
       <button type="submit" class="btn-save" id="btn-save">Save Schedule to Firestore</button>
       <div id="save-status" class="status-msg"></div>
     </form>
@@ -245,6 +255,8 @@
         document.getElementById('sch-status').value = data.status || 'Draft';
         document.getElementById('sch-reg-open').value = data.registrationOpen || '';
         document.getElementById('sch-reg-close').value = data.registrationClose || '';
+        document.getElementById('sch-admit').value = data.admitCardDate || '';
+        document.getElementById('sch-exam').value = data.examDate || '';
         document.getElementById('save-status').innerHTML = '<span style="color:var(--seoas-emerald);">Loaded successfully.</span>';
       } else {
         document.getElementById('schedule-form').reset();
@@ -267,6 +279,8 @@
       status: document.getElementById('sch-status').value,
       registrationOpen: document.getElementById('sch-reg-open').value,
       registrationClose: document.getElementById('sch-reg-close').value,
+      admitCardDate: document.getElementById('sch-admit').value,
+      examDate: document.getElementById('sch-exam').value,
       updatedAt: new Date().toISOString()
     };
 

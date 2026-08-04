@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btn = document.getElementById('btn-new-registration');
   const countdownEl = document.getElementById('seoas-countdown');
   const examInput = document.getElementById('exam-select');
+  const datesList = document.getElementById('important-dates-list');
 
   if (!btn || !countdownEl || !examInput) return;
 
@@ -14,15 +15,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const doc = await firebase.firestore().collection('examSchedules').doc(currentExam).get();
     
     if (!doc.exists) {
-      setNotAnnounced(btn, countdownEl);
+      setNotAnnounced(btn, countdownEl, datesList);
       return;
     }
 
     const schedule = doc.data();
 
     if (schedule.status !== 'Published') {
-      setNotAnnounced(btn, countdownEl);
+      setNotAnnounced(btn, countdownEl, datesList);
       return;
+    }
+
+    // Render Dates
+    if (datesList) {
+      datesList.innerHTML = `
+        <li><strong>Registration Open:</strong> ${formatScheduleDate(schedule.registrationOpen)}</li>
+        <li><strong>Last Date:</strong> ${formatScheduleDate(schedule.registrationClose)}</li>
+        <li><strong>Admit Card:</strong> ${formatScheduleDate(schedule.admitCardDate) || 'To be announced'}</li>
+        <li><strong>Exam Date:</strong> ${formatScheduleDate(schedule.examDate) || 'To be announced'}</li>
+      `;
     }
 
     // Start live engine
@@ -36,13 +47,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.disabled = true;
     btn.style.background = "#4b5563";
     countdownEl.innerHTML = `<span style="color:var(--seoas-gold); font-size: 0.9em;">(System: Firestore Database is not initialized or access is denied. Please configure it in the Firebase Console and deploy rules.)</span>`;
+    if (datesList) {
+      datesList.innerHTML = `<li>Error loading schedule data.</li>`;
+    }
   }
 });
 
-function setNotAnnounced(btn, countdownEl) {
+function formatScheduleDate(isoStr) {
+  if (!isoStr) return "";
+  const d = new Date(isoStr);
+  return d.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+}
+
+function setNotAnnounced(btn, countdownEl, datesList) {
   btn.textContent = "Coming Soon";
   btn.disabled = true;
   countdownEl.textContent = "Important Dates have not been announced.";
+  if (datesList) {
+    datesList.innerHTML = `<li>Dates have not been announced yet.</li>`;
+  }
 }
 
 function setClosed(btn, countdownEl) {

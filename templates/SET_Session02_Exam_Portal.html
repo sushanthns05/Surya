@@ -2273,7 +2273,7 @@ function populateQPaper() {
   EXAM_SECTIONS.forEach(sec => {
     const qs = QUESTIONS[sec.id];
     html += `<div class="qp-section">`;
-    html += `<div class="qp-sec-header">${sec.label} — ${sec.secName} (${sec.qCount} Questions | +${sec.marks.correct} / −${sec.marks.wrong})</div>`;
+    html += `<div class="qp-sec-header">${sec.label} (${sec.qCount} Questions | +${sec.marks.correct} / −${sec.marks.wrong})</div>`;
 
     qs.forEach((q, i) => {
       let globalNum = 0;
@@ -2299,6 +2299,9 @@ function populateQPaper() {
   });
 
   container.innerHTML = html;
+  if (window.MathJax) {
+    MathJax.typesetPromise([container]).catch(e => console.log(e));
+  }
 }
 
 // ── Close modals on clicking backdrop ──

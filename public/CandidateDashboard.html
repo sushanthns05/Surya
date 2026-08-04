@@ -234,7 +234,7 @@
         <h3>My Application</h3>
         <p style="margin: 1rem 0;">View your submitted application details and payment receipt.</p>
         <span class="status-badge">Submitted</span>
-        <button class="seoas-btn btn-outline" style="width: 100%; margin-top: 1rem;">View Details</button>
+        <button class="seoas-btn btn-outline" style="width: 100%; margin-top: 1rem;" onclick="viewApplicationDetails()">View Details</button>
       </div>
 
       <!-- Admit Card -->
@@ -300,6 +300,14 @@
     document.getElementById('login-app-no').value = '';
     document.getElementById('login-pass').value = '';
     document.getElementById('login-error').style.display = 'none';
+  }
+
+  function viewApplicationDetails() {
+    const appNo = document.getElementById('dash-app-no').textContent;
+    if (appNo) {
+      const apiBase = window.location.hostname === 'localhost' ? 'http://127.0.0.1:5000' : 'https://surya-s2f5.onrender.com';
+      window.open(`${apiBase}/uploads/${appNo}/application-form.pdf`, '_blank');
+    }
   }
 </script>
 

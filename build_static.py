@@ -10,6 +10,8 @@ Run from the SURYA project root:
 import io
 import sys
 import os
+import subprocess
+import shutil
 
 # Force UTF-8 stdout so print() never fails on Windows
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
@@ -25,7 +27,25 @@ ROOT   = Path(__file__).parent
 TMPL   = ROOT / "public" / "templates"
 PUBLIC = ROOT / "public"
 
-# Build a Jinja2 environment that explicitly reads templates as UTF-8
+# --- React Analytics Build Step ---
+# print("Building React Analytics App...")
+# try:
+#     subprocess.run("npm run build", cwd=str(ROOT / "react-analytics"), check=True, shell=True)
+#     
+#     # Copy output to public/assets/
+#     dist_assets = ROOT / "react-analytics" / "dist" / "assets"
+#     public_assets = PUBLIC / "assets"
+#     
+#     if dist_assets.exists():
+#         for file in dist_assets.iterdir():
+#             shutil.copy(file, public_assets / file.name)
+#         print("  [OK]  React Analytics bundle copied.")
+#     else:
+#         print("  [WARN] React Analytics dist/assets not found.")
+# except Exception as e:
+#     print(f"  [ERROR] Failed to build React Analytics: {e}")
+    
+# ── Setup ────────────────────────────────────────────────────────────────────
 env = Environment(
     loader=FileSystemLoader(str(TMPL), encoding="utf-8"),
     autoescape=False,
@@ -101,8 +121,51 @@ def load_csv_rows(filename):
         print(f"Error loading {filename}: {e}")
         return []
 
+def load_seoas_registrations():
+    jsonl_path = ROOT / "seoas_registrations.jsonl"
+    if not jsonl_path.exists():
+        return []
+    import json
+    rows = []
+    try:
+        with open(jsonl_path, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip(): continue
+                try:
+                    data = json.loads(line)
+                    # Mapping to match registrations.csv:
+                    # registration_id,name,email,phone,dob,gender,exam_category,priority_1,priority_2,priority_3,allocated_center,education_board
+                    row = [
+                        data.get("application_number", "UNKNOWN"),
+                        data.get("reg-name", ""),
+                        data.get("reg-email", ""),
+                        data.get("reg-mobile", ""),
+                        data.get("pd-dob", ""),
+                        data.get("pd-gender", ""),
+                        data.get("exam-type", "SST"), # Defaults to SST if not specified
+                        data.get("preference-1", ""),
+                        data.get("preference-2", ""),
+                        data.get("preference-3", "N/A"),
+                        "Pending", # allocated_center
+                        data.get("academic-board", "")
+                    ]
+                    rows.append(row)
+                except Exception as ex:
+                    pass
+    except Exception as e:
+        print(f"Error loading seoas_registrations.jsonl: {e}")
+    return rows
+
 broadcasts_list = load_broadcasts()
 registration_rows = load_csv_rows("registrations.csv")
+
+# Ensure header exists if registration_rows is empty
+if not registration_rows:
+    registration_rows = [["registration_id","name","email","phone","dob","gender","exam_category","priority_1","priority_2","priority_3","allocated_center","education_board"]]
+
+seoas_rows = load_seoas_registrations()
+registration_rows.extend(seoas_rows)
+
 contact_rows = load_csv_rows("contacts.csv")
 
 # Ensure uploads directory exists in public
