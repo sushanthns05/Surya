@@ -408,16 +408,66 @@ function renderConfirmation(data, result) {
 }
 
 function generateReviewSummary() {
-  const name = document.getElementById('reg-name').value || 'Not provided';
-  const exam = document.getElementById('exam-select').value || 'Not selected';
-  
-  document.getElementById('review-content').innerHTML = `
-    <div style="margin-bottom: 1rem;">
-      <strong>Name:</strong> ${name} <br>
-      <strong>Exam:</strong> ${exam} <br>
-    </div>
-    <button type="button" class="seoas-btn btn-outline" onclick="currentStep=2; updateUI();">Edit Details</button>
-  `;
+  const review = document.getElementById('review-content');
+  if (!review) return;
+  review.replaceChildren();
+
+  const fragment = document.createDocumentFragment();
+  const ignored = new Set(['reg-pass', 'reg-pass2', 'reg-mobile-otp', 'reg-email-otp']);
+  const controls = form.querySelectorAll('input, select, textarea');
+  let lastStep = null;
+
+  controls.forEach(input => {
+    if (input.type === 'file' || ignored.has(input.id) || input.type === 'button' || input.type === 'submit') return;
+    const step = input.closest('.wizard-step')?.dataset.step;
+    if (!step || step === '7' || step === '8' || step === '9' || step === '10') return;
+
+    if (step !== lastStep) {
+      const heading = document.createElement('h3');
+      heading.textContent = `Step ${step} details`;
+      heading.style.cssText = 'grid-column: 1 / -1; margin: 1rem 0 .25rem; color: var(--seoas-gold);';
+      fragment.appendChild(heading);
+      lastStep = step;
+    }
+
+    const label = input.closest('.form-group')?.querySelector('label')?.textContent
+      .trim().replace(/\s*\*\s*$/, '') || input.id || 'Detail';
+    const value = input.type === 'checkbox'
+      ? (input.checked ? 'Confirmed' : 'Not confirmed')
+      : (input.value.trim() || 'Not provided');
+    const item = document.createElement('div');
+    item.style.cssText = 'padding: .7rem; border: 1px solid rgba(255,255,255,.12); border-radius: 8px;';
+    const name = document.createElement('strong');
+    name.textContent = `${label}: `;
+    const detail = document.createElement('span');
+    detail.textContent = value;
+    item.append(name, detail);
+    fragment.appendChild(item);
+  });
+
+  const files = form.querySelectorAll('input[type="file"]');
+  if (files.length) {
+    const heading = document.createElement('h3');
+    heading.textContent = 'Uploaded documents';
+    heading.style.cssText = 'grid-column: 1 / -1; margin: 1rem 0 .25rem; color: var(--seoas-gold);';
+    fragment.appendChild(heading);
+    files.forEach(input => {
+      const item = document.createElement('div');
+      item.style.cssText = 'padding: .7rem; border: 1px solid rgba(255,255,255,.12); border-radius: 8px;';
+      const label = input.closest('.upload-zone')?.querySelector('h4')?.textContent.trim() || input.id || 'Document';
+      item.textContent = `${label}: ${input.files[0]?.name || 'Not uploaded'}`;
+      fragment.appendChild(item);
+    });
+  }
+
+  const edit = document.createElement('button');
+  edit.type = 'button';
+  edit.className = 'seoas-btn btn-outline';
+  edit.textContent = 'Edit Details';
+  edit.style.gridColumn = '1 / -1';
+  edit.addEventListener('click', () => { currentStep = 1; updateUI(); });
+  fragment.appendChild(edit);
+  review.appendChild(fragment);
 }
 
 
