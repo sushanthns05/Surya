@@ -592,8 +592,7 @@ def seoas_register():
         'pd-father': "Father's name", 'pd-mother': "Mother's name",
         'pd-income': 'Annual income', 'pd-address': 'Permanent address',
         'pd-state': 'State', 'pd-district': 'District', 'pd-pin': 'PIN code',
-        'academic-board': 'Class X board', 'academic-year': 'Class X passing year',
-        'academic-marks': 'Class X marks', 'exam-medium': 'Exam medium',
+        'exam-medium': 'Exam medium',
         'preference-1': 'Centre preference 1', 'preference-2': 'Centre preference 2'
     }
     missing = [label for key, label in required.items() if not value(key)]
@@ -613,13 +612,23 @@ def seoas_register():
         return jsonify({"status": "error", "message": "Government ID must contain 12 digits"}), 400
     if not re.fullmatch(r'\d{6}', value('pd-pin')):
         return jsonify({"status": "error", "message": "PIN code must contain 6 digits"}), 400
-    try:
-        year = int(value('academic-year'))
-        marks = float(value('academic-marks'))
-        if year < 1950 or year > datetime.now().year or marks < 0 or marks > 100:
-            raise ValueError
-    except ValueError:
-        return jsonify({"status": "error", "message": "Enter a valid passing year and marks between 0 and 100"}), 400
+    academic_values = {key: value(raw) for key, raw in data.items() if str(key).startswith('academic') and value(raw)}
+    if not academic_values:
+        return jsonify({"status": "error", "message": "Please complete the academic details"}), 400
+    if value('academic-year'):
+        try:
+            year = int(value('academic-year'))
+            if year < 1950 or year > datetime.now().year:
+                raise ValueError
+        except ValueError:
+            return jsonify({"status": "error", "message": "Enter a valid passing year"}), 400
+    if value('academic-marks'):
+        try:
+            marks = float(value('academic-marks'))
+            if marks < 0 or marks > 100:
+                raise ValueError
+        except ValueError:
+            return jsonify({"status": "error", "message": "Enter marks between 0 and 100"}), 400
 
     allowed_centers = {
         'Bengaluru', 'Mysuru', 'Mangaluru', 'Hubballi-Dharwad', 'Kalaburagi',

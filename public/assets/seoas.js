@@ -255,6 +255,9 @@ function collectFormData() {
     'State': 'pd-state', 'District': 'pd-district', 'PIN Code': 'pd-pin',
     'Class X Board': 'academic-board', 'Class X Passing Year': 'academic-year',
     'Class X Marks (%)': 'academic-marks', 'Medium of Examination': 'exam-medium',
+    'Class XII Board': 'academic-board', 'Class XII Stream': 'academic-stream',
+    'Class XII Marks (%)': 'academic-marks', 'Current Class/Degree': 'academic-current-class',
+    'Previous Class Marks': 'academic-marks', 'Previous Year Marks (%)': 'academic-marks',
     'Preference 1': 'preference-1', 'Preference 2': 'preference-2',
     'Nationality': 'nationality'
   };
