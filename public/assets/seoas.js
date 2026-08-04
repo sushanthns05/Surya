@@ -221,13 +221,16 @@ async function finalSubmit() {
     });
     const response = await fetch(`${SEOAS_API_BASE}/api/seoas-register`, { method: 'POST', body: payload });
     const result = await response.json();
-    if (!response.ok || result.status !== 'ok') throw new Error(result.message || 'Registration was rejected');
+    if (!response.ok || result.status !== 'ok' || !result.application_number) {
+      throw new Error(result.message || 'The server did not return an application number');
+    }
 
     // Success Update
     const name = document.getElementById('reg-name').value || 'Candidate';
     document.getElementById('conf-name').textContent = name;
     document.getElementById('conf-app-no').textContent = result.application_number;
-    nextStep(); // Advance to Confirmation
+    currentStep = 10;
+    updateUI();
     localStorage.removeItem('seoas-draft'); // Clear auto-save
 
   } catch (err) {
@@ -292,6 +295,35 @@ function handleFileUpload(input, previewContainerId) {
 }
 
 // Review Summary
+const EXAM_CENTERS = {
+  Karnataka: ['Bengaluru', 'Mysuru', 'Mangaluru', 'Hubballi-Dharwad', 'Kalaburagi'],
+  'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem'],
+  Maharashtra: ['Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Aurangabad (Chhatrapati Sambhajinagar)'],
+  Telangana: ['Hyderabad', 'Warangal', 'Karimnagar', 'Nizamabad', 'Khammam'],
+  'Andhra Pradesh': ['Visakhapatnam', 'Vijayawada', 'Tirupati', 'Guntur', 'Kurnool'],
+  Kerala: ['Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Kannur']
+};
+
+function populateExamCenters() {
+  document.querySelectorAll('.form-group').forEach(group => {
+    const label = group.querySelector('label');
+    const input = group.querySelector('input[type="text"]');
+    if (!label || !input || !/^Preference [12]$/.test(label.textContent.trim())) return;
+    const select = document.createElement('select');
+    select.id = `preference-${label.textContent.trim().slice(-1)}`;
+    select.required = true;
+    select.innerHTML = '<option value="">Select a city</option>';
+    Object.entries(EXAM_CENTERS).forEach(([state, cities]) => {
+      const optgroup = document.createElement('optgroup');
+      optgroup.label = state;
+      cities.forEach(city => optgroup.appendChild(new Option(city, city)));
+      select.appendChild(optgroup);
+    });
+    select.value = input.value;
+    input.replaceWith(select);
+  });
+}
+
 function generateReviewSummary() {
   const name = document.getElementById('reg-name').value || 'Not provided';
   const exam = document.getElementById('exam-select').value || 'Not selected';
@@ -307,6 +339,7 @@ function generateReviewSummary() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+  populateExamCenters();
   setTimeout(() => {
     const pass = document.getElementById('reg-pass');
     if(pass) {

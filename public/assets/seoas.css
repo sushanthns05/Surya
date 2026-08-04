@@ -205,6 +205,12 @@
   color: #f8fafc;
   background: #1e293b;
 }
+#exam-select {
+  color: #f8fafc !important;
+  background: rgba(59, 130, 246, 0.22) !important;
+  -webkit-text-fill-color: #f8fafc;
+  opacity: 1 !important;
+}
 .seoas-wizard-container {
   min-height: calc(100vh - 180px);
   padding-bottom: 4rem;
