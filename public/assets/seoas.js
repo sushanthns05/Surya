@@ -221,10 +221,15 @@ async function finalSubmit() {
       throw new Error(result.message || 'The server did not return an application number');
     }
 
-    // Success Update
-    const name = document.getElementById('reg-name').value || 'Candidate';
+    // Success Update. Use the submitted payload as a fallback so the
+    // confirmation cannot appear with a blank candidate name.
+    const name = data['reg-name'] || document.getElementById('reg-name')?.value || result.details?.name || 'Candidate';
+    const applicationNumber = String(result.application_number).trim();
+    if (/^SEOAS-X+$/i.test(applicationNumber)) {
+      throw new Error('The server returned an invalid application number. Please try again.');
+    }
     document.getElementById('conf-name').textContent = name;
-    document.getElementById('conf-app-no').textContent = result.application_number;
+    document.getElementById('conf-app-no').textContent = applicationNumber;
     renderConfirmation(data, result);
     currentStep = 10;
     updateUI();
