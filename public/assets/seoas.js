@@ -281,7 +281,7 @@ function collectFormData() {
     // the label map works consistently ("Father's Name*" vs "Father's Name").
     const label = input.closest('.form-group')?.querySelector('label')?.textContent
       .trim().replace(/\s*\*\s*$/, '');
-    const step = input.closest('.wizard-step')?.dataset.step;
+    const isAcademicField = Boolean(input.closest('#dynamic-academic-fields'));
     const normalizedLabel = label?.toLowerCase()
       .replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
     let key = input.id || labelKeys[label] || normalizedLabel;
@@ -289,8 +289,10 @@ function collectFormData() {
     // The API uses the academic-* prefix to detect that at least one
     // qualification was provided.  Academic controls in the exam variants
     // are intentionally generated without ids, so classify all controls in
-    // Step 3 under that namespace.
-    if (!input.id && step === '3') {
+    // under that namespace. The academic section is Step 4 in the current
+    // wizard, but targeting the section keeps this correct for every exam
+    // variant regardless of step ordering.
+    if (isAcademicField && !String(key).startsWith('academic-')) {
       key = `academic-${normalizedLabel || 'detail'}`;
     }
     if (key) data[key] = input.value;
