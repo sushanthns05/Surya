@@ -383,6 +383,50 @@ def send_registration_email(candidate_email, candidate_name, application_number,
 
     threading.Thread(target=send_thread, daemon=True).start()
 
+def generate_application_pdf(application_number, registration_data, password, upload_dir):
+    """Create the candidate's downloadable application summary PDF."""
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.lib.units import mm
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+
+    pdf_path = os.path.join(upload_dir, 'application-form.pdf')
+    styles = getSampleStyleSheet()
+    body = styles['BodyText']
+    body.fontSize = 9
+    body.leading = 12
+    title = styles['Title']
+    title.textColor = colors.HexColor('#1e3a8a')
+    rows = [
+        [Paragraph('<b>Application Number</b>', body), Paragraph(html.escape(application_number), body)],
+        [Paragraph('<b>Password</b>', body), Paragraph(html.escape(password), body)],
+    ]
+    for key, raw_value in registration_data.items():
+        if key == 'password_hash' or key.startswith('file_') or raw_value in ('', None):
+            continue
+        label = str(key).replace('-', ' ').replace('_', ' ').title()
+        rows.append([Paragraph(f'<b>{html.escape(label)}</b>', body), Paragraph(html.escape(str(raw_value)), body)])
+
+    document = SimpleDocTemplate(
+        pdf_path, pagesize=A4, rightMargin=16 * mm, leftMargin=16 * mm,
+        topMargin=16 * mm, bottomMargin=16 * mm,
+    )
+    story = [Paragraph('SURYA EDUCATION BOARD', title), Paragraph('Candidate Application Form', styles['Heading2']), Spacer(1, 8)]
+    table = Table(rows, colWidths=[55 * mm, 115 * mm], repeatRows=1)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#eaf2ff')),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#94a3b8')),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 7), ('RIGHTPADDING', (0, 0), (-1, -1), 7),
+        ('TOPPADDING', (0, 0), (-1, -1), 6), ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    story.append(table)
+    story.append(Spacer(1, 12))
+    story.append(Paragraph('Please keep this application form for your records.', body))
+    document.build(story)
+    return f'/uploads/{application_number}/application-form.pdf'
+
 def registration_duplicate(data):
     """Return the duplicate field label, if this person has already registered."""
     candidate = {
@@ -601,8 +645,15 @@ def seoas_register():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
         
+    try:
+        pdf_url = generate_application_pdf(app_no, data, password, upload_dir)
+    except Exception as exc:
+        print(f'[PDF] Failed to create application PDF for {app_no}: {exc}', flush=True)
+        return jsonify({"status": "error", "message": "Application saved, but the PDF could not be generated. Please contact support."}), 500
+
     send_registration_email(value('reg-email'), value('reg-name'), app_no, data, password)
-    return jsonify({"status": "ok", "application_number": app_no, "message": "Application submitted successfully. A confirmation email has been sent."})
+    public_details = {key: value for key, value in data.items() if key != 'password_hash'}
+    return jsonify({"status": "ok", "application_number": app_no, "pdf_url": pdf_url, "details": public_details, "password": password, "message": "Application submitted successfully. A confirmation email has been sent."})
 
 @app.route('/register', methods=['POST'])
 def handle_register():

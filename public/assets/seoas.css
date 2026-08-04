@@ -256,6 +256,16 @@
 }
 .hidden-input { display: none; }
 .image-preview { max-width: 100%; height: auto; border-radius: 8px; display: none; margin-top: 1rem; }
+.confirmation-details {
+  max-height: 55vh;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+#conf-pdf {
+  display: inline-flex;
+  margin-top: 1rem;
+  text-decoration: none;
+}
 
 #reg-pass, #reg-pass2 {
   position: relative !important;

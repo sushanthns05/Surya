@@ -229,6 +229,7 @@ async function finalSubmit() {
     const name = document.getElementById('reg-name').value || 'Candidate';
     document.getElementById('conf-name').textContent = name;
     document.getElementById('conf-app-no').textContent = result.application_number;
+    renderConfirmation(data, result);
     currentStep = 10;
     updateUI();
     localStorage.removeItem('seoas-draft'); // Clear auto-save
@@ -322,6 +323,35 @@ function populateExamCenters() {
     select.value = input.value;
     input.replaceWith(select);
   });
+}
+
+function renderConfirmation(data, result) {
+  const details = document.querySelector('.wizard-step[data-step="10"] .confirmation-details');
+  if (!details) return;
+  details.replaceChildren();
+  const allDetails = { application_number: result.application_number, ...data, password: result.password || '' };
+  Object.entries(allDetails).forEach(([key, value]) => {
+    if (key.startsWith('file_') || key === 'password_hash' || value === '') return;
+    const item = document.createElement('div');
+    const label = document.createElement('strong');
+    label.textContent = `${key.replace(/[-_]/g, ' ')}: `;
+    const text = document.createElement('span');
+    text.textContent = String(value);
+    if (key === 'application_number') text.className = 'text-emerald';
+    item.append(label, text);
+    details.appendChild(item);
+  });
+  let download = document.getElementById('conf-pdf');
+  if (!download) {
+    download = document.createElement('a');
+    download.id = 'conf-pdf';
+    download.className = 'seoas-btn btn-primary';
+    download.textContent = 'Download Application PDF';
+    download.target = '_blank';
+    download.rel = 'noopener';
+    details.parentElement.appendChild(download);
+  }
+  download.href = new URL(result.pdf_url, SEOAS_API_BASE || window.location.origin).href;
 }
 
 function generateReviewSummary() {
