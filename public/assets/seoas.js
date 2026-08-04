@@ -208,11 +208,7 @@ async function finalSubmit() {
   submitBtn.disabled = true;
 
   try {
-    const data = {};
-    const inputs = form.querySelectorAll('input:not([type="file"]), select, textarea');
-    inputs.forEach(input => {
-      if (input.id) data[input.id] = input.value;
-    });
+    const data = collectFormData();
 
     const payload = new FormData();
     payload.append('data', JSON.stringify(data));
@@ -245,13 +241,30 @@ async function finalSubmit() {
 // Auto Save
 function autoSave() {
   if (currentStep >= 10 || !form) return;
-  const data = {};
-  const inputs = form.querySelectorAll('input:not([type="file"]), select, textarea');
-  inputs.forEach(input => {
-    if (input.id && !['reg-pass', 'reg-pass2'].includes(input.id)) data[input.id] = input.value;
-  });
+  const data = collectFormData();
+  delete data['reg-pass'];
+  delete data['reg-pass2'];
   localStorage.setItem('seoas-draft', JSON.stringify(data));
   console.log('Auto-saved at', new Date().toLocaleTimeString());
+}
+
+function collectFormData() {
+  const labelKeys = {
+    "Father's Name": 'pd-father', "Mother's Name": 'pd-mother',
+    'Annual Income': 'pd-income', 'Permanent Address': 'pd-address',
+    'State': 'pd-state', 'District': 'pd-district', 'PIN Code': 'pd-pin',
+    'Class X Board': 'academic-board', 'Class X Passing Year': 'academic-year',
+    'Class X Marks (%)': 'academic-marks', 'Medium of Examination': 'exam-medium',
+    'Preference 1': 'preference-1', 'Preference 2': 'preference-2',
+    'Nationality': 'nationality'
+  };
+  const data = {};
+  form.querySelectorAll('input:not([type="file"]), select, textarea').forEach(input => {
+    const label = input.closest('.form-group')?.querySelector('label')?.textContent.trim();
+    const key = input.id || labelKeys[label] || label?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    if (key) data[key] = input.value;
+  });
+  return data;
 }
 
 setInterval(autoSave, 20000); // Save every 20s

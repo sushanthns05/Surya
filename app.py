@@ -12,6 +12,7 @@ import base64
 import urllib.parse
 import urllib.request
 import urllib.error
+import uuid
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -596,7 +597,7 @@ def seoas_register():
     if duplicate:
         return jsonify({"status": "error", "message": f"A registration already exists for this {duplicate}. Only one registration is allowed per person."}), 409
 
-    app_no = f"SEOAS{int(time.time() * 1000)}"
+    app_no = f"SEOAS-{datetime.now().year}-{uuid.uuid4().hex[:12].upper()}"
     data['application_number'] = app_no
     data['timestamp'] = datetime.now().isoformat()
     data['password_hash'] = hashlib.sha256(password.encode('utf-8')).hexdigest()
