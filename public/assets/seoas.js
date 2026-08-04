@@ -263,8 +263,23 @@ function collectFormData() {
   };
   const data = {};
   form.querySelectorAll('input:not([type="file"]), select, textarea').forEach(input => {
-    const label = input.closest('.form-group')?.querySelector('label')?.textContent.trim();
-    const key = input.id || labelKeys[label] || label?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    // Some of the exam-specific academic fields do not have ids.  Keep their
+    // labels as a fallback, but normalize the required-field marker first so
+    // the label map works consistently ("Father's Name*" vs "Father's Name").
+    const label = input.closest('.form-group')?.querySelector('label')?.textContent
+      .trim().replace(/\s*\*\s*$/, '');
+    const step = input.closest('.wizard-step')?.dataset.step;
+    const normalizedLabel = label?.toLowerCase()
+      .replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    let key = input.id || labelKeys[label] || normalizedLabel;
+
+    // The API uses the academic-* prefix to detect that at least one
+    // qualification was provided.  Academic controls in the exam variants
+    // are intentionally generated without ids, so classify all controls in
+    // Step 3 under that namespace.
+    if (!input.id && step === '3') {
+      key = `academic-${normalizedLabel || 'detail'}`;
+    }
     if (key) data[key] = input.value;
   });
   return data;
